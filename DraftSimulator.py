@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 import numpy as np
+from faker import Faker
 
 from db.DBHandler import DBHandler
 from db.models.models import DraftPick
@@ -19,6 +20,7 @@ class DraftSimulator:
     draft_year: int;
     draft_order: List[DraftPick] = field(default_factory=list)
     draft_result: List = field(default_factory=list)
+    fake = Faker()
 
     def __post_init__(self):
         self.draft_order = self.db_handler.get_draft_picks(self.draft_year)
@@ -44,7 +46,7 @@ class DraftSimulator:
         points_per_game = np.random.randint(0,2000)/100
         rebounds_per_game = np.random.randint(0,2000)/100
         assists_per_game = np.random.randint(0,2000)/100
-        return Player(name=str(uuid.uuid4()),
+        return Player(name='{} {}'.format(self.fake.first_name_male(), self.fake.last_name()),
                       points_per_game=points_per_game,
                       rebounds_per_game=rebounds_per_game,
                       assists_per_game=assists_per_game,

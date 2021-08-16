@@ -6,6 +6,7 @@ from db.models.draft_pick import DraftPick
 from db.models.game_mapper import GameMapper
 from db.models.player import Player
 from db.models.team import Team
+import pandas as pd
 
 
 # revision identifiers, used by Alembic.
@@ -24,11 +25,13 @@ def get_team_names(input_data) -> dict:
                             division=i['division'],
                             short_name=i['shortName']) for i in teams}
 
+
 def get_team_short_names(input_data) -> dict:
     teams = input_data['teams']
     return {i['shortName']: Team(name=i['name'], conference=i['conference'],
-                            division=i['division'],
-                            short_name=i['shortName']) for i in teams}
+                                 division=i['division'],
+                                 short_name=i['shortName']) for i in teams}
+
 
 def get_players(input_data, team_dict) -> List[Player]:
     teams = input_data['teams']
@@ -47,22 +50,26 @@ def get_players(input_data, team_dict) -> List[Player]:
     return players
 
 
-def get_draft_picks(input_data, teams_dict) -> List[DraftPick]:
+def get_draft_picks(input_data, teams_dict, year) -> List[DraftPick]:
     draft_picks = []
     for pick_number, team_name in enumerate(input_data['draft_positions']):
         draft_pick = DraftPick(team=teams_dict[team_name],
                                pick_number=pick_number,
                                team_id=teams_dict[team_name].id,
-                               year=0)
+                               year=year)
         draft_picks.append(draft_pick)
     return draft_picks
 
-def get_game_mappings(short_name_teams_dict: dict):
-    game_tuples = []
-    with open('C:\\Users\\d91421\\code\\nba-franchise-manager\\alembic\\schedule202021.csv', newline='') as f:
-        reader = csv.reader(f, delimiter='\t')
-        for row in reader:
-            gm = GameMapper(home_team_short_name=row[0],
-                            away_team_short_name=row[1])
-            game_tuples.append(gm)
-    return game_tuples
+
+def get_game_mappings():
+    from pbpstats.data_loader import DataNbaScheduleLoader
+    game_mappers = []
+    schedule_loader = DataNbaScheduleLoader("nba", "2018-2019", "Regular Season", "web")
+
+    df = pd.DataFrame([i.data for i in schedule_loader.items])
+    for row_index, row_tuple in df.iterrows():
+        gm = GameMapper(home_team_short_name=row_tuple['home_team_abbreviation'],
+                        away_team_short_name=row_tuple['away_team_abbreviation'])
+        game_mappers.append(gm)
+    return game_mappers
+
