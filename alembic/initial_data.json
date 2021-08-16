@@ -1,0 +1,287 @@
+{
+  "teams": [
+    {
+      "name": "Boston Celtics",
+      "shortName": "BOS",
+      "conference": "EAST",
+      "division": "ATLANTIC",
+      "players": [
+        {
+          "name": "Jayson Tatum",
+          "points_per_game": 15.2,
+          "assists_per_game": 2.1,
+          "rebounds_per_game": 3.8
+        },
+        {
+          "name": "Jaylen Brown",
+          "points_per_game": 15.2,
+          "assists_per_game": 2.1,
+          "rebounds_per_game": 3.8
+        }
+      ]
+    },
+    {
+      "name": "Brooklyn Nets",
+      "shortName": "BKN",
+      "conference": "EAST",
+      "division": "ATLANTIC",
+      "players": []
+    },
+    {
+      "name": "New York Knicks",
+      "shortName": "NYK",
+      "conference": "EAST",
+      "division": "ATLANTIC",
+      "players": []
+    },
+    {
+      "name": "Philadelphia 76ers",
+      "shortName": "PHI",
+      "conference": "EAST",
+      "division": "ATLANTIC",
+      "players": []
+    },
+    {
+      "name": "Toronto Raptors",
+      "shortName": "TOR",
+      "conference": "EAST",
+      "division": "ATLANTIC",
+      "players": []
+    },
+    {
+      "name": "Chicago Bulls",
+      "shortName": "CHI",
+      "conference": "EAST",
+      "division": "CENTRAL",
+      "players": []
+    },
+    {
+      "name": "Cleveland Cavaliers",
+      "shortName": "CLE",
+      "conference": "EAST",
+      "division": "CENTRAL",
+      "players": []
+    },
+    {
+      "name": "Detroit Pistons",
+      "shortName": "DET",
+      "conference": "EAST",
+      "division": "CENTRAL",
+      "players": []
+    },
+    {
+      "name": "Indiana Pacers",
+      "shortName": "IND",
+      "conference": "EAST",
+      "division": "CENTRAL",
+      "players": []
+    },
+    {
+      "name": "Milwaukee Bucks",
+      "shortName": "MIL",
+      "conference": "EAST",
+      "division": "CENTRAL",
+      "players": []
+    },
+    {
+      "name": "Atlanta Hawks",
+      "shortName": "ATL",
+      "conference": "EAST",
+      "division": "SOUTHEAST",
+      "players": []
+    },
+    {
+      "name": "Charlotte Hornets",
+      "shortName": "CHA",
+      "conference": "EAST",
+      "division": "SOUTHEAST",
+      "players": []
+    },
+    {
+      "name": "Orlando Magic",
+      "shortName": "ORL",
+      "conference": "EAST",
+      "division": "SOUTHEAST",
+      "players": []
+    },
+    {
+      "name": "Washington Wizards",
+      "shortName": "WAS",
+      "conference": "EAST",
+      "division": "SOUTHEAST",
+      "players": []
+    },
+    {
+      "name": "Miami Heat",
+      "shortName": "MIA",
+      "conference": "EAST",
+      "division": "SOUTHEAST",
+      "players": [
+        {
+          "name": "Bam Adebayo",
+          "points_per_game": 17.2,
+          "assists_per_game": 9.1,
+          "rebounds_per_game": 0.8
+        },
+        {
+          "name": "Tyler Herro",
+          "points_per_game": 15.2,
+          "assists_per_game": 2.1,
+          "rebounds_per_game": 3.8
+        }
+      ]
+    },
+    {
+      "name": "Denver Nuggets",
+      "shortName": "DEN",
+      "conference": "WEST",
+      "division": "NORTHWEST",
+      "players": []
+    },
+    {
+      "name": "Minnesota Timberwolves",
+      "shortName": "MIN",
+      "conference": "WEST",
+      "division": "NORTHWEST",
+      "players": []
+    },
+    {
+      "name": "Oklahoma City Thunder",
+      "shortName": "OKC",
+      "conference": "WEST",
+      "division": "NORTHWEST",
+      "players": []
+    },
+    {
+      "name": "Portland Trail Blazers",
+      "shortName": "POR",
+      "conference": "WEST",
+      "division": "NORTHWEST",
+      "players": []
+    },
+    {
+      "name": "Utah Jazz",
+      "shortName": "UTA",
+      "conference": "WEST",
+      "division": "NORTHWEST",
+      "players": []
+    },
+    {
+      "name": "Los Angeles Clippers",
+      "shortName": "LAC",
+      "conference": "WEST",
+      "division": "PACIFIC",
+      "players": []
+    },
+    {
+      "name": "Phoenix Suns",
+      "shortName": "PHX",
+      "conference": "WEST",
+      "division": "PACIFIC",
+      "players": []
+    },
+    {
+      "name": "Sacramento Kings",
+      "shortName": "SAC",
+      "conference": "WEST",
+      "division": "PACIFIC",
+      "players": []
+    },
+    {
+      "name": "Dallas Mavericks",
+      "shortName": "DAL",
+      "conference": "WEST",
+      "division": "SOUTHWEST",
+      "players": []
+    },
+    {
+      "name": "Houston Rockets",
+      "shortName": "HOU",
+      "conference": "WEST",
+      "division": "SOUTHWEST",
+      "players": []
+    },
+    {
+      "name": "Memphis Grizzlies",
+      "shortName": "MEM",
+      "conference": "WEST",
+      "division": "SOUTHWEST",
+      "players": []
+    },
+    {
+      "name": "New Orleans Pelicans",
+      "shortName": "NOP",
+      "conference": "WEST",
+      "division": "SOUTHWEST",
+      "players": []
+    },
+    {
+      "name": "San Antonio Spurs",
+      "shortName": "SAS",
+      "conference": "WEST",
+      "division": "SOUTHWEST",
+      "players": [
+        {
+          "name": "Dejounte Murray",
+          "points_per_game": 10.2,
+          "assists_per_game": 5.1,
+          "rebounds_per_game": 1.8
+        },
+        {
+          "name": "Derrick White",
+          "points_per_game": 10.2,
+          "assists_per_game": 5.1,
+          "rebounds_per_game": 1.8
+        }
+      ]
+    },
+    {
+      "name": "Golden State Warriors",
+      "shortName": "GSW",
+      "conference": "WEST",
+      "division": "PACIFIC",
+      "players": [
+        {
+          "name": "Stephen Curry",
+          "points_per_game": 28.2,
+          "assists_per_game": 2.1,
+          "rebounds_per_game": 3.8
+        },
+        {
+          "name": "Klay Thompson",
+          "points_per_game": 15.2,
+          "assists_per_game": 2.1,
+          "rebounds_per_game": 3.8
+        }
+      ]
+    },
+    {
+      "name": "Los Angeles Lakers",
+      "shortName": "LAL",
+      "conference": "WEST",
+      "division": "PACIFIC",
+      "players": [
+        {
+          "name": "Lebron James",
+          "points_per_game": 25.1,
+          "assists_per_game": 10.1,
+          "rebounds_per_game": 7.8
+        },
+        {
+          "name": "Anthony Davis",
+          "points_per_game": 28.9,
+          "assists_per_game": 4.1,
+          "rebounds_per_game": 9.8
+        }
+      ]
+    }
+  ],
+  "draft_positions": [
+    "San Antonio Spurs",
+    "Boston Celtics",
+    "Golden State Warriors",
+    "Miami Heat",
+    "San Antonio Spurs",
+    "Los Angeles Lakers"
+  ]
+}

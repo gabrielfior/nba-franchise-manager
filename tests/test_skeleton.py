@@ -1,6 +1,6 @@
 import pytest
 
-from nba_franchise_manager.skeleton import fib, main
+from skeleton import fib, main
 
 __author__ = "Gabriel Fior"
 __copyright__ = "Gabriel Fior"
