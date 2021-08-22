@@ -3,7 +3,9 @@ nba-franchise-manager
 =====================
 
 
-Add a short description here!
+Development work for Master Thesis in Software Engineering in Oxford.
+Goal is to simulate 5 NBA seasons and assess which type of contribution (draft pick, trade, existing player in roster)
+is more valuable for winning championships.
 
 
 Description
