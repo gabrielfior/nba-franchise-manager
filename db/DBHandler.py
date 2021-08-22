@@ -56,3 +56,14 @@ class DBHandler:
         with self.Session.begin() as session:
             session.add_all(games)
             session.commit()
+
+    def update_games(self, games):
+        with self.Session.begin() as session:
+            session.add_all(games)
+            session.commit()
+
+    def get_games(self, simulation_id):
+        with self.Session.begin() as session:
+            game_mappers = session.query(Game).filter(Game.simulation_id == simulation_id).all()
+            session.expunge_all()
+        return game_mappers

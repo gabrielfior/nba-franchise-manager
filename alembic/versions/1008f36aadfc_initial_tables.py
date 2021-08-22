@@ -1,8 +1,8 @@
 """initial tables
 
-Revision ID: 4af34f0608f0
+Revision ID: 1008f36aadfc
 Revises: 
-Create Date: 2021-08-16 20:18:54.351770
+Create Date: 2021-08-22 10:23:11.298732
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4af34f0608f0'
+revision = '1008f36aadfc'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,6 +29,7 @@ def upgrade():
     )
     op.create_table('draft_picks',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('simulation_id', sa.String(length=250), nullable=True),
     sa.Column('pick_number', sa.Integer(), nullable=False),
     sa.Column('team_id', sa.Integer(), nullable=True),
     sa.Column('year', sa.Integer(), nullable=False),
@@ -46,6 +47,7 @@ def upgrade():
     op.create_table('games',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('year', sa.Integer(), nullable=False),
+    sa.Column('simulation_id', sa.String(length=250), nullable=True),
     sa.Column('home_team_id', sa.Integer(), nullable=False),
     sa.Column('away_team_id', sa.Integer(), nullable=False),
     sa.Column('game_date', sa.Date(), nullable=False),
@@ -68,6 +70,7 @@ def upgrade():
     )
     op.create_table('standings',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('simulation_id', sa.String(length=250), nullable=True),
     sa.Column('year', sa.Integer(), nullable=False),
     sa.Column('team_id', sa.Integer(), nullable=False),
     sa.Column('position', sa.Integer(), nullable=True),

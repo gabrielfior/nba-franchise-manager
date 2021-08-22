@@ -1,20 +1,22 @@
-import csv
 import json
+import os
 from typing import List
+
+import pandas as pd
 
 from db.models.draft_pick import DraftPick
 from db.models.game_mapper import GameMapper
 from db.models.player import Player
 from db.models.team import Team
-import pandas as pd
 
 
 # revision identifiers, used by Alembic.
 
 def read_initial_data() -> dict:
-    # pdb.set_trace()
-    filename = './alembic/initial_data.json'
-    with open(filename, 'r') as x:
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    filename = 'initial_data.json'
+    with open(os.path.join(__location__, filename), 'r') as x:
         d = json.load(x)
     return d
 
@@ -50,13 +52,14 @@ def get_players(input_data, team_dict) -> List[Player]:
     return players
 
 
-def get_draft_picks(input_data, teams_dict, year) -> List[DraftPick]:
+def get_draft_picks(input_data, teams_dict, year, simulation_id) -> List[DraftPick]:
     draft_picks = []
     for pick_number, team_name in enumerate(input_data['draft_positions']):
         draft_pick = DraftPick(team=teams_dict[team_name],
-                               pick_number=pick_number,
+                               pick_number=pick_number+1,
                                team_id=teams_dict[team_name].id,
-                               year=year)
+                               year=year,
+                               simulation_id=simulation_id)
         draft_picks.append(draft_pick)
     return draft_picks
 

@@ -25,7 +25,7 @@ class DraftSimulator:
     def __post_init__(self):
         self.draft_order = self.db_handler.get_draft_picks(self.draft_year)
 
-    def simulate_draft(self):
+    def simulate_draft(self, simulation_id):
         self.model_draft()
         # get standings from previous years (build draft order)
         # also allow for a previous draft order to be given (e.g. for first year)
@@ -54,4 +54,4 @@ class DraftSimulator:
                       team=draft_pick.team, team_id=draft_pick.team_id)
 
     def store_drafted_players(self):
-        self.db_handler.store_drafted_players(self.draft_result, self.draft_year) #self.draft_result
+        self.db_handler.store_drafted_players(self.draft_result, self.draft_year)

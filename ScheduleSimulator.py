@@ -23,8 +23,10 @@ def random_date(start: datetime, end:datetime):
 class ScheduleSimulator:
     db_handler: DBHandler
     year: int
+    simulation_id: str
     begin_of_regular_season: datetime = dataclasses.field(init=False) #date(year, 11, 1)
     end_of_regular_season: datetime = dataclasses.field(init=False) #date(year+1, 4, 1)
+    game_type: str = "REGULAR_SEASON"
 
     def __post_init__(self):
         self.begin_of_regular_season = date(self.year, 11, 1)
@@ -44,7 +46,8 @@ class ScheduleSimulator:
             away_team = team_maps[game_mapper.away_team_short_name]
             game = Game(year=self.year, home_team=home_team, home_team_id=home_team.id,
                       away_team=away_team, away_team_id=away_team.id,
-                      game_date=self.get_random_game_date())
+                      game_date=self.get_random_game_date(), simulation_id=self.simulation_id,
+                        game_type=self.game_type)
             games.append(game)
 
             # otherwise add to 3 games

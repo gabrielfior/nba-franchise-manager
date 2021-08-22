@@ -13,6 +13,7 @@ class Standing:
     __sa_dataclass_metadata_key__ = "sa"
 
     id: int = field(init=False, metadata={"sa": Column(Integer, primary_key=True)})
+    simulation_id: str = field(metadata={"sa": Column(String(250))})
     year: int = field(metadata={"sa": Column(Integer, nullable=False)})
     team_id: int = field(metadata={"sa": Column(Integer, ForeignKey('teams.id'), nullable=False)})
     team: Team = field(metadata={"sa": relationship("Team", lazy='joined')})
