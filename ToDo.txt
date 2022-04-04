@@ -1,0 +1,19 @@
+To be implemented:
+
+-> After season is complete, calculate schedule using previous standings
+    -> Store playoff games
+    -> Simulate playoff games
+-> Generate results of season
+    -> Store results of season
+-> Model draft pick according to statistical distribution of previous drafts
+-> Simulate games properly using RAPTOR
+-> Process after season was ended
+    -> Calculate win shares for each player of the championship team
+    -> Calculate additional metrics for each player
+    -> Save metrics into table
+    -> Repeat for each team
+-> Do statistical analysis on championship teams -> what contribution is more important? Draft,
+previously signed players, trades?
+    -> How many players with ppg > 20 a team needs?
+    -> Think of additional questions...
+

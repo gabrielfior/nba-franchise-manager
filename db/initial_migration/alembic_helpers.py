@@ -1,8 +1,9 @@
 import json
 import os
 from typing import List
-
+import pathlib
 import pandas as pd
+from pbpstats.data_loader import DataNbaScheduleWebLoader, DataNbaScheduleLoader
 
 from db.models.draft_pick import DraftPick
 from db.models.game_mapper import GameMapper
@@ -65,9 +66,10 @@ def get_draft_picks(input_data, teams_dict, year, simulation_id) -> List[DraftPi
 
 
 def get_game_mappings():
-    from pbpstats.data_loader import DataNbaScheduleLoader
     game_mappers = []
-    schedule_loader = DataNbaScheduleLoader("nba", "2018-2019", "Regular Season", "web")
+    current_dir = pathlib.Path(__file__).parent
+    w = DataNbaScheduleWebLoader(current_dir.joinpath('pbpstats_data'))
+    schedule_loader = DataNbaScheduleLoader("nba", "2018-2019", "Regular Season", w)
 
     df = pd.DataFrame([i.data for i in schedule_loader.items])
     for row_index, row_tuple in df.iterrows():

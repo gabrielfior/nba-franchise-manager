@@ -36,6 +36,8 @@ class DraftSimulator:
 
     def model_draft(self):
         # returns 60 players with given attributes, determined solely by draft position.
+        if not self.draft_order:
+            raise Exception('No draft picks could be retrieved, maybe run_initial_data was not started.')
         for draft_position, draft_pick in enumerate(self.draft_order):
             player = self.model_player(draft_pick)
             self.draft_result.append((draft_position, player, draft_pick.team_id))

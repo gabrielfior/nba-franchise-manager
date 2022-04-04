@@ -1,37 +1,6 @@
-import datetime
-from dataclasses import dataclass, field
-from typing import List, Tuple
+from dataclasses import dataclass
 
 from db.DBHandler import DBHandler
-
-
-# ToDo - Move to models
-# class Game:
-#     id: int
-#     home_team: Team
-#     away_team: Team
-#     game_date: datetime.datetime
-#
-#
-# @dataclass
-# class GameResult:
-#     game: Game
-#     winner: Team
-#     loser: Team
-#
-#
-# class RegularSeasonSchedule:
-#     games: Game
-#
-#
-# class PlayoffSchedule:
-#     games: Game
-#
-#
-# @dataclass()
-# class Standings:
-#     team_positions: List[Tuple[int, Team]]  # teams are sorted according to position.
-
 
 """
 Class for simulating one 82-game season.
