@@ -1,5 +1,6 @@
 To be implemented:
 
+(OK) -> Calculate Standings after simulation
 -> After season is complete, calculate schedule using previous standings
     -> Store playoff games
     -> Simulate playoff games

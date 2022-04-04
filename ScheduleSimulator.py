@@ -3,8 +3,6 @@ from dataclasses import dataclass
 from datetime import date, timedelta, datetime
 from random import randrange
 
-import tabulate
-
 from db.DBHandler import DBHandler
 from db.models.game import Game
 

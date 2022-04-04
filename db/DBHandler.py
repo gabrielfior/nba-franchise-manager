@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
 from db.models.draft_pick import DraftPick
@@ -40,11 +40,19 @@ class DBHandler:
         return teams
 
     def get_teams_by_team_short_name(self) -> dict:
+        teams_by_short_name = self._get_teams_by_func(lambda x: (x.short_name, x))
+        return teams_by_short_name
+
+    def get_teams_by_team_id(self) -> dict:
+        teams_by_short_name = self._get_teams_by_func(lambda x: (x.id, x))
+        return teams_by_short_name
+
+    def _get_teams_by_func(self, func):
         with self.Session.begin() as session:
             teams = session.query(Team).order_by(Team.id.asc()).all()
             session.expunge_all()
-        teams_by_short_name = {i.short_name: i for i in teams}
-        return teams_by_short_name
+        teams_by_func = {func(i)[0]: func(i)[1] for i in teams}
+        return teams_by_func
 
     def get_game_mappers(self) -> List[GameMapper]:
         with self.Session.begin() as session:
@@ -67,3 +75,8 @@ class DBHandler:
             game_mappers = session.query(Game).filter(Game.simulation_id == simulation_id).all()
             session.expunge_all()
         return game_mappers
+
+    def write_standings(self, standings):
+        with self.Session.begin() as session:
+            session.add_all(standings)
+            session.commit()
