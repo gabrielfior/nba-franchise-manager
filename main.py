@@ -1,35 +1,15 @@
-import uuid
-
-from DraftSimulator import DraftSimulator
-from GameSimulator import GameSimulator
-from PlayoffCoordinator import PlayoffCordinator
 from ScenarioSimulator import ScenarioSimulator
-from ScheduleSimulator import ScheduleSimulator
-from StandingsCalculator import StandingsCalculator
 from db.DBHandler import DBHandler
 
 if __name__ == "__main__":
 
     db_handler = DBHandler()
-    draft_year = 2021
+    start_year = 2021
 
-    simulation_id = str(uuid.uuid4())
-    print ('simulating ID {}'.format(simulation_id))
+    #simulation_id = '29b61f39-a87b-42f7-864f-8bb7c11e5a18'
+    #print ('simulating ID {}'.format(simulation_id))
 
-    draft_simulator = DraftSimulator(db_handler, draft_year)
-    s = ScenarioSimulator(draft_simulator)
-    s.simulate_scenario(1)
-    d = ScheduleSimulator(db_handler, draft_year, simulation_id=simulation_id)
-    d.generate_schedule()
-
-    g = GameSimulator(simulation_id,db_handler)
-    g.simulate_reg_season()
-
-    sc = StandingsCalculator(db_handler, simulation_id, draft_year)
-    sc.calculate_standings()
-
-    game_simulator = GameSimulator(simulation_id, db_handler)
-    pc = PlayoffCordinator(db_handler, simulation_id, draft_year, game_simulator)
-    pc.simulate_playoffs()
+    s = ScenarioSimulator(db_handler, start_year=start_year)
+    s.simulate_scenario(2)
 
     print ('done')

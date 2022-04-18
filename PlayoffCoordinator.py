@@ -13,7 +13,7 @@ from helpers import random_date
 
 
 @dataclasses.dataclass
-class PlayoffCordinator:
+class PlayoffCoordinator:
     db_handler: DBHandler
     simulation_id: str
     year: int
@@ -54,13 +54,13 @@ class PlayoffCordinator:
             self.update_bracket(round_identifier, bracket)
 
         bracket_db = bracket.to_db(self.simulation_id)
-        self.db_handler.write_playoff_bracket(bracket_db)
+        self.db_handler.write_entities([bracket_db])
 
     def create_bracket(self) -> PlayoffBracket:
         # read from standings
         standings = self.db_handler.get_standings_by_simulation_id(self.simulation_id)
         logger.info("Retrieved {} standings".format(len(standings)))
-        pb = PlayoffBracket(standings)
+        pb = PlayoffBracket(self.simulation_id, self.year, standings)
         return pb
 
     def create_playoff_games(self, round_identifier: GameTypes, bracket: PlayoffBracket):
@@ -82,7 +82,7 @@ class PlayoffCordinator:
         # for loop, simulate games
         for game in games:
             self.game_simulator.simulate_game(game)
-        self.db_handler.write_games(games)
+        self.db_handler.write_entities(games)
 
     def generate_games_for_matchup(self, round_identifier, team_a: TeamDb, team_b: TeamDb):
         # Generate 2-2-1-1-1 games (home vs away)
@@ -100,4 +100,4 @@ class PlayoffCordinator:
             games.append(game)
         # Write games into DB
         logger.info("Writing matchup {} - {}".format(team_a, team_b))
-        self.db_handler.write_games(games)
+        self.db_handler.write_entities(games)

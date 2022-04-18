@@ -42,7 +42,7 @@ class StandingsCalculator:
                                )
                 standings.append(s)
 
-        self.db_handler.write_standings(standings)
+        self.db_handler.write_entities(standings)
 
     def calc_ordered_teams(self, games_df):
         ranked_wins = games_df.groupby(by='team_won', as_index=False)['id'].agg('count').sort_values('id',

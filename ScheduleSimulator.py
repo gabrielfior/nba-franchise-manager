@@ -41,4 +41,4 @@ class ScheduleSimulator:
 
             # otherwise add to 3 games
 
-        self.db_handler.write_games(games)
+        self.db_handler.write_entities(games)

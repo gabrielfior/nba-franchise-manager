@@ -4,18 +4,21 @@ To be implemented:
 -> After season is complete, calculate schedule using previous standings
     (OK) -> Store playoff games
     (OK) -> Simulate playoff games
--> Generate results of season
-    -> Store results of season
--> Extend simulation to multiple years
+(OK) -> Generate results of season
+(OK) -> Extend simulation to multiple years
+-> Simulate games properly using RAPTOR
+    -> Add game_stats table with mapping to game
+    -> Simulate games so that each player has its own points total, assists total, minutes, etc
 -> Write initial skeleton of thesis with main points
     -> Send Max for initial review
--> Model draft pick according to statistical distribution of previous drafts
--> Simulate games properly using RAPTOR
+-> Add existing rosters to JSON file
 -> Process after season was ended
+    (We want players' metrics, what does a team look like)
     -> Calculate win shares for each player of the championship team
-    -> Calculate additional metrics for each player
+    -> Calculate players with points per game
     -> Save metrics into table
     -> Repeat for each team
+-> Model draft pick according to statistical distribution of previous drafts
 -> Do statistical analysis on championship teams -> what contribution is more important? Draft,
 previously signed players, trades?
     -> How many players with ppg > 20 a team needs?

@@ -4,7 +4,7 @@ from db.DBHandler import DBHandler
 from db.initial_migration.alembic_helpers import *
 from alembic import op
 
-from db.models.game import Game
+from db.models.game import GameDb
 
 
 class InitialDataFiller:
@@ -32,6 +32,6 @@ class InitialDataFiller:
 
     def delete_initial_data(self):
         with self.db_handler.Session() as session:
-            for table in [Player, Team, DraftPick, GameMapper, Game]:
+            for table in [PlayerDb, TeamDb, DraftPickDb, GameMapperDb, GameDb]:
                 session.query(table).delete()
             session.commit()

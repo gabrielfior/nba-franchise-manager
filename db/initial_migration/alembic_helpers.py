@@ -48,7 +48,8 @@ def get_players(input_data, team_dict) -> List[PlayerDb]:
                          rebounds_per_game=player['rebounds_per_game'],
                          assists_per_game=player['assists_per_game'],
                          team=team_db,
-                         team_id=team_db.id)
+                         team_id=team_db.id,
+                         simulation_id=None)
             players.append(p)
     return players
 

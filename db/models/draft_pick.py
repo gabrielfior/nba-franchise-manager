@@ -15,5 +15,5 @@ class DraftPickDb:
     simulation_id: str = field(metadata={"sa": Column(String(250))})
     pick_number: int = field(metadata={"sa": Column("pick_number", Integer, nullable=False)})
     team_id: int = field(metadata={"sa": Column("team_id", Integer, ForeignKey('teams.id'))})
-    team: TeamDb = field(metadata={"sa": relationship("Team", lazy='joined')})
+    team: TeamDb = field(metadata={"sa": relationship("TeamDb", lazy='joined')})
     year: int = field(metadata={"sa": Column("year", Integer, nullable=False)})
