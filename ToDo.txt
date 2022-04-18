@@ -2,10 +2,13 @@ To be implemented:
 
 (OK) -> Calculate Standings after simulation
 -> After season is complete, calculate schedule using previous standings
-    -> Store playoff games
-    -> Simulate playoff games
+    (OK) -> Store playoff games
+    (OK) -> Simulate playoff games
 -> Generate results of season
     -> Store results of season
+-> Extend simulation to multiple years
+-> Write initial skeleton of thesis with main points
+    -> Send Max for initial review
 -> Model draft pick according to statistical distribution of previous drafts
 -> Simulate games properly using RAPTOR
 -> Process after season was ended

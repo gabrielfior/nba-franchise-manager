@@ -1,21 +1,12 @@
 import dataclasses
 from dataclasses import dataclass
-from datetime import date, timedelta, datetime
-from random import randrange
+from datetime import date, datetime
 
 from db.DBHandler import DBHandler
 from db.models.game import Game
+from enums import GameTypes
+from helpers import random_date
 
-
-def random_date(start: datetime, end:datetime):
-    """
-    This function will return a random datetime between two datetime
-    objects.
-    """
-    delta = end - start
-    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
-    random_second = randrange(int_delta)
-    return start + timedelta(seconds=random_second)
 
 @dataclass
 class ScheduleSimulator:
@@ -24,7 +15,7 @@ class ScheduleSimulator:
     simulation_id: str
     begin_of_regular_season: datetime = dataclasses.field(init=False) #date(year, 11, 1)
     end_of_regular_season: datetime = dataclasses.field(init=False) #date(year+1, 4, 1)
-    game_type: str = "REGULAR_SEASON"
+    game_type: str = GameTypes.REGULAR_SEASON.value
 
     def __post_init__(self):
         self.begin_of_regular_season = date(self.year, 11, 1)
@@ -49,6 +40,5 @@ class ScheduleSimulator:
             games.append(game)
 
             # otherwise add to 3 games
-        #print(tabulate.tabulate([dataclasses.asdict(i) for i in game_tuples]))
-        # ToDo - Generate games
+
         self.db_handler.write_games(games)

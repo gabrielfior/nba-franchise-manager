@@ -5,6 +5,7 @@ import pandas as pd
 
 from db.DBHandler import DBHandler
 from db.models.standing import Standing
+from enums import Conferences
 
 
 @dataclasses.dataclass
@@ -47,7 +48,7 @@ class StandingsCalculator:
         ranked_wins = games_df.groupby(by='team_won', as_index=False)['id'].agg('count').sort_values('id',
                                                                                                      ascending=False)
         grouped_standings = ranked_wins.groupby(by='id')['team_won'].apply(list).sort_index(ascending=False)
-        ordered_teams = {'EAST': [], 'WEST': []}
+        ordered_teams = {Conferences.EAST.value: [], Conferences.WEST.value: []}
         for win_total, team_ids in grouped_standings.iteritems():
             np.random.shuffle(team_ids)
             for team_id in team_ids:
