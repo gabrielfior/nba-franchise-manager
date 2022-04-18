@@ -1,14 +1,10 @@
-import datetime
 from dataclasses import dataclass, field
 
-from sqlalchemy import String, Column, Integer, ForeignKey, Date
-from sqlalchemy.orm import relationship
-
-from db.models.team import Team
+from sqlalchemy import String, Column, Integer, ForeignKey
 
 
 @dataclass
-class GameMapper:
+class GameMapperDb:
     __tablename__ = 'game_mapper'
     __sa_dataclass_metadata_key__ = "sa"
 

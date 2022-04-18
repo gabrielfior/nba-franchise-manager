@@ -1,16 +1,14 @@
 from dataclasses import dataclass, field
 
-from sqlalchemy import Column, Integer, ForeignKey, String
-from sqlalchemy.orm import relationship
-
-from db.models.team import Team
+from sqlalchemy import Column, Integer, String
 
 
 @dataclass
-class PlayoffBracket:
+class PlayoffBracketDb:
     __tablename__ = "playoff_brackets"
     __sa_dataclass_metadata_key__ = "sa"
 
     id: int = field(init=False, metadata={"sa": Column("id", Integer, primary_key=True)})
     simulation_id: str = field(metadata={"sa": Column(String(250))})
+    year: int = field(metadata={"sa": Column("year", Integer, nullable=False)})
     nodes_sep_comma: str = field(metadata={"sa": Column(String(250), nullable=False)})

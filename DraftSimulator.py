@@ -6,8 +6,8 @@ import numpy as np
 from faker import Faker
 
 from db.DBHandler import DBHandler
-from db.models.models import DraftPick
-from db.models.player import Player
+from db.models.models import DraftPickDb
+from db.models.player import PlayerDb
 
 """
 Class for simulating draft in a given year.
@@ -18,7 +18,7 @@ Class for simulating draft in a given year.
 class DraftSimulator:
     db_handler: DBHandler
     draft_year: int;
-    draft_order: List[DraftPick] = field(default_factory=list)
+    draft_order: List[DraftPickDb] = field(default_factory=list)
     draft_result: List = field(default_factory=list)
     fake = Faker()
 
@@ -42,18 +42,18 @@ class DraftSimulator:
             player = self.model_player(draft_pick)
             self.draft_result.append((draft_position, player, draft_pick.team_id))
 
-    def model_player(self, draft_pick: DraftPick) -> Player:
+    def model_player(self, draft_pick: DraftPickDb) -> PlayerDb:
         # ToDo - Generate player`s statistics from draft_position using a distribution of 5 years players
         #  statistics stored in DB.
         points_per_game = np.random.randint(0,2000)/100
         rebounds_per_game = np.random.randint(0,2000)/100
         assists_per_game = np.random.randint(0,2000)/100
-        return Player(name='{} {}'.format(self.fake.first_name_male(), self.fake.last_name()),
-                      points_per_game=points_per_game,
-                      rebounds_per_game=rebounds_per_game,
-                      assists_per_game=assists_per_game,
-                      year_drafted=self.draft_year,
-                      team=draft_pick.team, team_id=draft_pick.team_id)
+        return PlayerDb(name='{} {}'.format(self.fake.first_name_male(), self.fake.last_name()),
+                        points_per_game=points_per_game,
+                        rebounds_per_game=rebounds_per_game,
+                        assists_per_game=assists_per_game,
+                        year_drafted=self.draft_year,
+                        team=draft_pick.team, team_id=draft_pick.team_id)
 
     def store_drafted_players(self):
         self.db_handler.store_drafted_players(self.draft_result, self.draft_year)

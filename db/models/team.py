@@ -5,7 +5,7 @@ from sqlalchemy import String, Column, Integer
 
 
 @dataclass
-class Team:
+class TeamDb:
     __tablename__ = 'teams'
     __sa_dataclass_metadata_key__ = "sa"
 

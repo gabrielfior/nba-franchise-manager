@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from db.DBHandler import DBHandler
-from db.models.standing import Standing
+from db.models.standing import StandingDb
 from enums import Conferences
 
 
@@ -32,14 +32,14 @@ class StandingsCalculator:
         for _, conf_team_ids in ordered_teams.items():
             for conf_position, conf_team_id in enumerate(conf_team_ids):
                 team = self.teams_dict[conf_team_id]
-                s = Standing(simulation_id=self.simulation_id,
-                             year=self.year,
-                             team=team,
-                             team_id=team.id,
-                             division=team.division,
-                             conference=team.conference,
-                             position=conf_position+1
-                             )
+                s = StandingDb(simulation_id=self.simulation_id,
+                               year=self.year,
+                               team=team,
+                               team_id=team.id,
+                               division=team.division,
+                               conference=team.conference,
+                               position=conf_position+1
+                               )
                 standings.append(s)
 
         self.db_handler.write_standings(standings)

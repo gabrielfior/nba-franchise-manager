@@ -1,23 +1,17 @@
-import dataclasses
 from typing import List
 
 import binarytree
 from binarytree import build, Node
 
-from db.models.game import Game
-from db.models.playoff_bracket import PlayoffBracket as PlayoffBracketDb
-from db.models.playoff_bracket import PlayoffBracket
-from db.models.standing import Standing
+from db.models.game import GameDb
+from db.models.playoff_bracket import PlayoffBracketDb
+from db.models.standing import StandingDb
 from enums import GameTypes, Conferences
 
 
-@dataclasses.dataclass
 class PlayoffBracket:
 
-    def __init__(self, standings: List[Standing]):
-
-        # self.root = build(
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+    def __init__(self, simulation_id: str, year: int, standings: List[StandingDb]):
 
         self.round_level_lookup = {
             GameTypes.CONF_QUARTER_FINALS: -2,
@@ -25,10 +19,11 @@ class PlayoffBracket:
             GameTypes.CONF_FINALS: -4,
             GameTypes.FINALS: -5,
         }
-
+        self.simulation_id = simulation_id
+        self.year = year
         self.root: Node = build(self._get_values_for_build(standings))
 
-    def _get_values_for_build(self, standings: List[Standing]):
+    def _get_values_for_build(self, standings: List[StandingDb]):
         values = [0] * 15
         # read from standings
         standings_map = {Conferences.EAST.value: {}, Conferences.WEST.value: {}}
@@ -62,7 +57,7 @@ class PlayoffBracket:
             matchups.append((team_a, team_b))
         return matchups
 
-    def update_bracket(self, round_identifier, games: List[Game]):
+    def update_bracket(self, round_identifier, games: List[GameDb]):
         matchups = self.get_matchups(round_identifier)
         for team_a_node, team_b_node in matchups:
             team_a_id, team_b_id = team_a_node.value, team_b_node.value
@@ -100,6 +95,7 @@ class PlayoffBracket:
         return games_to_clean_up
 
     def to_db(self, simulation_id) -> PlayoffBracketDb:
-        pb_db = PlayoffBracketDb(simulation_id=simulation_id,
+        pb_db = PlayoffBracketDb(simulation_id=self.simulation_id,
+                                 year=self.year,
                                  nodes_sep_comma=','.join([str(i) for i in self.root.values]))
         return pb_db

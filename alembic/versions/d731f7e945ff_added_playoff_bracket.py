@@ -1,8 +1,8 @@
 """added playoff bracket
 
-Revision ID: f9da7d0a70cd
+Revision ID: d731f7e945ff
 Revises: e1a74dbc9a31
-Create Date: 2022-04-18 19:32:13.937664
+Create Date: 2022-04-18 19:47:35.174043
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f9da7d0a70cd'
+revision = 'd731f7e945ff'
 down_revision = 'e1a74dbc9a31'
 branch_labels = None
 depends_on = None
@@ -21,6 +21,7 @@ def upgrade():
     op.create_table('playoff_brackets',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('simulation_id', sa.String(length=250), nullable=True),
+    sa.Column('year', sa.Integer(), nullable=False),
     sa.Column('nodes_sep_comma', sa.String(length=250), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )

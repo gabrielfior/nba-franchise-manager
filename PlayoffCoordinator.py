@@ -6,8 +6,8 @@ from loguru import logger
 from GameSimulator import GameSimulator
 from PlayoffBracket import PlayoffBracket
 from db.DBHandler import DBHandler
-from db.models.game import Game
-from db.models.team import Team
+from db.models.game import GameDb
+from db.models.team import TeamDb
 from enums import GameTypes
 from helpers import random_date
 
@@ -84,7 +84,7 @@ class PlayoffCordinator:
             self.game_simulator.simulate_game(game)
         self.db_handler.write_games(games)
 
-    def generate_games_for_matchup(self, round_identifier, team_a: Team, team_b: Team):
+    def generate_games_for_matchup(self, round_identifier, team_a: TeamDb, team_b: TeamDb):
         # Generate 2-2-1-1-1 games (home vs away)
         games = []
         for game_idx in range(1, 8):
@@ -93,10 +93,10 @@ class PlayoffCordinator:
 
             game_date = random_date(self.playoff_dates[round_identifier]['begin'],
                                     self.playoff_dates[round_identifier]['end'])
-            game = Game(year=self.year, home_team=home_team, home_team_id=home_team.id,
-                        away_team=away_team, away_team_id=away_team.id,
-                        game_date=game_date, simulation_id=self.simulation_id,
-                        game_type=round_identifier.value)
+            game = GameDb(year=self.year, home_team=home_team, home_team_id=home_team.id,
+                          away_team=away_team, away_team_id=away_team.id,
+                          game_date=game_date, simulation_id=self.simulation_id,
+                          game_type=round_identifier.value)
             games.append(game)
         # Write games into DB
         logger.info("Writing matchup {} - {}".format(team_a, team_b))

@@ -1,16 +1,14 @@
 import datetime
-import uuid
 from dataclasses import dataclass, field
 
 from sqlalchemy import String, Column, Integer, ForeignKey, Date
 from sqlalchemy.orm import relationship
 
-from db.models.guid import GUID
-from db.models.team import Team
+from db.models.team import TeamDb
 
 
 @dataclass
-class Game:
+class GameDb:
     __tablename__ = 'games'
     __sa_dataclass_metadata_key__ = "sa"
 
@@ -19,11 +17,11 @@ class Game:
     simulation_id: str = field(metadata={"sa": Column(String(250))})
     game_type: str = field(metadata={"sa": Column(String(250), nullable=False)})
     home_team_id: int = field(metadata={"sa": Column(Integer, ForeignKey('teams.id'), nullable=False)})
-    home_team: Team = field(
+    home_team: TeamDb = field(
         metadata={"sa": relationship("Team", foreign_keys=[home_team_id.metadata['sa']], lazy='joined')})
 
     away_team_id: int = field(metadata={"sa": Column(Integer, ForeignKey('teams.id'), nullable=False)})
-    away_team: Team = field(metadata={"sa": relationship("Team", foreign_keys=[away_team_id.metadata['sa']], lazy='joined')})
+    away_team: TeamDb = field(metadata={"sa": relationship("Team", foreign_keys=[away_team_id.metadata['sa']], lazy='joined')})
     game_date: datetime.date = field(metadata={"sa": Column(Date, nullable=False)})
     home_team_points: int = field(metadata={"sa": Column(Integer)}, default_factory=int)
     away_team_points: int = field(metadata={"sa": Column(Integer)}, default_factory=int)
