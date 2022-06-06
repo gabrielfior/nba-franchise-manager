@@ -16,7 +16,8 @@ class InitialDataFiller:
     def insert_initial_data(self):
         input_data = read_initial_data()
         team_dict = get_team_names(input_data)
-        players = get_players(input_data, team_dict)
+        players_df = read_initial_csv()
+        players = get_players(team_dict, players_df)
         draft_picks = get_draft_picks(input_data, team_dict, self.draft_year, simulation_id=None)
 
         # game_mapper
@@ -33,5 +34,5 @@ class InitialDataFiller:
     def delete_initial_data(self):
         with self.db_handler.Session() as session:
             for table in [PlayerDb, TeamDb, DraftPickDb, GameMapperDb, GameDb]:
-                session.query(table).delete()
+                session.execute('DELETE from {} where 1=1'.format(table.__tablename__))
             session.commit()

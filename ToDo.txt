@@ -6,12 +6,12 @@ To be implemented:
     (OK) -> Simulate playoff games
 (OK) -> Generate results of season
 (OK) -> Extend simulation to multiple years
+(OK) -> Add existing rosters to JSON file
 -> Simulate games properly using RAPTOR
     -> Add game_stats table with mapping to game
     -> Simulate games so that each player has its own points total, assists total, minutes, etc
 -> Write initial skeleton of thesis with main points
     -> Send Max for initial review
--> Add existing rosters to JSON file
 -> Process after season was ended
     (We want players' metrics, what does a team look like)
     -> Calculate win shares for each player of the championship team

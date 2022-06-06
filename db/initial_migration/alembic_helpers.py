@@ -35,22 +35,27 @@ def get_team_short_names(input_data) -> dict:
                                    division=i['division'],
                                    short_name=i['shortName']) for i in teams}
 
+def read_initial_csv() -> pd.DataFrame:
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    filename = 'players_202122.csv'
+    file_location = os.path.join(__location__, filename)
+    return pd.read_csv(file_location)
 
-def get_players(input_data, team_dict) -> List[PlayerDb]:
-    teams = input_data['teams']
+
+def get_players(team_dict, players_df: pd.DataFrame) -> List[PlayerDb]:
     players = []
-    for team in teams:
-        team_db = team_dict[team['name']]
-        for player in team['players']:
-            p = PlayerDb(year_drafted=-1,
-                         name=player['name'],
-                         points_per_game=player['points_per_game'],
-                         rebounds_per_game=player['rebounds_per_game'],
-                         assists_per_game=player['assists_per_game'],
-                         team=team_db,
-                         team_id=team_db.id,
-                         simulation_id=None)
-            players.append(p)
+    for player_tuple in players_df.itertuples():
+        team_db = team_dict[player_tuple.full_name_team]
+        p = PlayerDb(year_drafted=-1,
+                     name=player_tuple.full_name_player,
+                     points_per_game=player_tuple.PTS_per_game,
+                     rebounds_per_game=player_tuple.REB_per_game,
+                     assists_per_game=player_tuple.AST_per_game,
+                     team=team_db,
+                     team_id=team_db.id,
+                     simulation_id=None)
+        players.append(p)
     return players
 
 
