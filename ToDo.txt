@@ -7,8 +7,12 @@ To be implemented:
 (OK) -> Generate results of season
 (OK) -> Extend simulation to multiple years
 (OK) -> Add existing rosters to JSON file
--> Simulate games properly using RAPTOR
+-> Simulate games simply using points per game
     -> Add game_stats table with mapping to game
+    -> Game simulation logic -derive gaussian distribution (mean, std) for each player at start of the season
+        -> Mean = average of player
+        -> Std -> linspace : for 30 points it's 30%, for 10 pts 50%, for 3 pts 100% - as approximation based on 3 values
+        -> See analysis_points_scored_per_game.ipynb
     -> Simulate games so that each player has its own points total, assists total, minutes, etc
 -> Write initial skeleton of thesis with main points
     -> Send Max for initial review
@@ -23,4 +27,5 @@ To be implemented:
 previously signed players, trades?
     -> How many players with ppg > 20 a team needs?
     -> Think of additional questions...
+-> If enough time: simulate games with more sophisticated logic (e.g. RAPTOR)
 
