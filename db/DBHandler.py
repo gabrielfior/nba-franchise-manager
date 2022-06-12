@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker, class_mapper
 from db.models.draft_pick import DraftPickDb
 from db.models.game import GameDb
 from db.models.game_mapper import GameMapperDb
+from db.models.player import PlayerDb
 from db.models.playoff_bracket import PlayoffBracketDb
 from db.models.standing import StandingDb
 from db.models.team import TeamDb
@@ -106,3 +107,6 @@ class DBHandler:
 
     def get_standings_by_simulation_id(self, simulation_id):
         return self.get_all(StandingDb, [('simulation_id', simulation_id)], [('conference', 'asc'), ('position', 'asc')])
+
+    def get_players_by_team(self, team_id) -> List[PlayerDb]:
+        return self.get_all(PlayerDb, [('team_id', team_id)])

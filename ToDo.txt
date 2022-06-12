@@ -9,11 +9,10 @@ To be implemented:
 (OK) -> Add existing rosters to JSON file
 -> Simulate games simply using points per game
     -> Add game_stats table with mapping to game
-    -> Game simulation logic -derive gaussian distribution (mean, std) for each player at start of the season
-        -> Mean = average of player
-        -> Std -> linspace : for 30 points it's 30%, for 10 pts 50%, for 3 pts 100% - as approximation based on 3 values
-        -> See analysis_points_scored_per_game.ipynb
-    -> Simulate games so that each player has its own points total, assists total, minutes, etc
+    (OK) -> Game simulation logic -derive gaussian distribution (mean, std) for each player at start of the season
+        (OK)-> Mean = average of player
+        (OK)-> Std -> linspace : for 30 points it's 30%, for 10 pts 50%, for 3 pts 100% - as approximation based on 3 values
+        (OK)-> See analysis_points_scored_per_game.ipynb
 -> Write initial skeleton of thesis with main points
     -> Send Max for initial review
 -> Process after season was ended
@@ -23,8 +22,10 @@ To be implemented:
     -> Save metrics into table
     -> Repeat for each team
 -> Model draft pick according to statistical distribution of previous drafts
--> Do statistical analysis on championship teams -> what contribution is more important? Draft,
-previously signed players, trades?
+    -> Add age of each draft pick
+    -> Add evolution of stats according to age
+-> Model each player decline with age after every season
+-> Do statistical analysis on championship teams -> what contribution is more important? Draft, previously signed players, trades?
     -> How many players with ppg > 20 a team needs?
     -> Think of additional questions...
 -> If enough time: simulate games with more sophisticated logic (e.g. RAPTOR)

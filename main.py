@@ -10,6 +10,6 @@ if __name__ == "__main__":
     #print ('simulating ID {}'.format(simulation_id))
 
     s = ScenarioSimulator(db_handler, start_year=start_year)
-    s.simulate_scenario(2)
+    s.simulate_scenario(1)
 
     print ('done')
