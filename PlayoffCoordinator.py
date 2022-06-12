@@ -1,5 +1,6 @@
 import dataclasses
 from datetime import date
+from typing import List
 
 from loguru import logger
 
@@ -7,6 +8,7 @@ from GameSimulator import GameSimulator
 from PlayoffBracket import PlayoffBracket
 from db.DBHandler import DBHandler
 from db.models.game import GameDb
+from db.models.player import PlayerDb
 from db.models.team import TeamDb
 from enums import GameTypes
 from helpers import random_date
@@ -80,8 +82,9 @@ class PlayoffCoordinator:
         # read from DB and round matches
         games = self.db_handler.get_games_by_game_type(self.simulation_id, round)
         # for loop, simulate games
+        players: List[PlayerDb] = self.db_handler.get_all(PlayerDb)
         for game in games:
-            self.game_simulator.simulate_game(game)
+            self.game_simulator.simulate_game(game, players)
         self.db_handler.write_entities(games)
 
     def generate_games_for_matchup(self, round_identifier, team_a: TeamDb, team_b: TeamDb):

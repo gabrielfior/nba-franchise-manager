@@ -8,7 +8,6 @@ from db.models.draft_pick import DraftPickDb
 from db.models.game import GameDb
 from db.models.game_mapper import GameMapperDb
 from db.models.player import PlayerDb
-from db.models.playoff_bracket import PlayoffBracketDb
 from db.models.standing import StandingDb
 from db.models.team import TeamDb
 from enums import GameTypes
@@ -96,7 +95,8 @@ class DBHandler:
 
     def write_entities(self, entities):
         with self.Session.begin() as session:
-            session.add_all(entities)
+            #session.add_all(entities)
+            session.bulk_save_objects(entities)
             session.commit()
 
     def delete_games(self, games: GameDb):

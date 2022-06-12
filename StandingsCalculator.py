@@ -27,7 +27,7 @@ class StandingsCalculator:
 
         ordered_teams = self.calc_ordered_teams(games_df)
 
-        # ToDo - Write standings on each team
+
         standings = []
         for _, conf_team_ids in ordered_teams.items():
             for conf_position, conf_team_id in enumerate(conf_team_ids):

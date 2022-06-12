@@ -7,8 +7,8 @@ To be implemented:
 (OK) -> Generate results of season
 (OK) -> Extend simulation to multiple years
 (OK) -> Add existing rosters to JSON file
--> Simulate games simply using points per game
-    -> Add game_stats table with mapping to game
+(OK) -> Simulate games simply using points per game
+    (OK) -> Add game_stats table with mapping to game
     (OK) -> Game simulation logic -derive gaussian distribution (mean, std) for each player at start of the season
         (OK)-> Mean = average of player
         (OK)-> Std -> linspace : for 30 points it's 30%, for 10 pts 50%, for 3 pts 100% - as approximation based on 3 values
