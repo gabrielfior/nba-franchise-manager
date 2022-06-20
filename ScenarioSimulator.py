@@ -8,6 +8,7 @@ from PlayoffCoordinator import PlayoffCoordinator
 from ScheduleSimulator import ScheduleSimulator
 from StandingsCalculator import StandingsCalculator
 from db.DBHandler import DBHandler
+from enums import GameTypes
 
 
 @dataclass
@@ -30,7 +31,7 @@ class ScenarioSimulator:
         game_simulator = GameSimulator(self.db_handler, self.simulation_id)
 
         ScheduleSimulator(self.db_handler, year, simulation_id=self.simulation_id).generate_schedule()
-        game_simulator.simulate_reg_season()
+        game_simulator.simulate_game_type(self.simulation_id, year, GameTypes.REGULAR_SEASON)
         StandingsCalculator(self.db_handler, self.simulation_id, year).calculate_standings()
         PlayoffCoordinator(self.db_handler, self.simulation_id, year, game_simulator).simulate_playoffs()
         LotteryCoordinator(self.db_handler, self.simulation_id).generate_lottery(year)

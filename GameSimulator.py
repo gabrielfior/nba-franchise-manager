@@ -3,7 +3,6 @@ from typing import List
 
 import numpy as np
 from retry import retry
-from scipy import interpolate
 
 from db.DBHandler import DBHandler
 from db.models.game import GameDb
@@ -21,15 +20,16 @@ class GameSimulator:
     db_handler: DBHandler
     simulation_id: str
 
-    def simulate_reg_season(self):
-        games = self.db_handler.get_games_by_game_type(self.simulation_id, GameTypes.REGULAR_SEASON)
+    def simulate_game_type(self, simulation_id, year, game_type = GameTypes.REGULAR_SEASON):
+        games = self.db_handler.get_games_by_game_type(self.simulation_id, game_type)
+        players: List[PlayerDb] = self.db_handler.get_players_for_season(simulation_id, year)
         game_stats_to_write = []
-        players: List[PlayerDb] = self.db_handler.get_all(PlayerDb)
         for game in games:
             all_game_stats = self.simulate_game(game, players)
             game_stats_to_write.extend(all_game_stats)
         self.db_handler.write_entities(games)
         self.db_handler.write_entities(game_stats_to_write)
+
 
     def simulate_game(self, game: GameDb, players: List[PlayerDb]) -> List[GameStatsDb]:
         """
@@ -83,13 +83,13 @@ class GameSimulator:
 
     def make_distribution_for_player(self, points_per_game: float) -> float:
         """
-        Based on the notebook "analysis_points_scored_per_game", we define an interpolation for deriving the
-        stdev of a gaussian centered around the player's scoring average.
+        Based on the notebook "analysis_points_scored_per_game", we define a linear regression function for deriving
+        the stdev of a gaussian centered around the player's scoring average.
         :param points_per_game:
         :return:
         """
-        x_points = [3, 10., 30]
-        y_points = [1., 0.5, 0.3]
+        intercept = 2.524495
+        coef = 0.26738
 
-        f2 = interpolate.interp1d(x_points, y_points, kind='linear', fill_value='extrapolate')
-        return points_per_game, float(f2(points_per_game)) * points_per_game
+        std_dev = points_per_game * coef + intercept
+        return points_per_game, std_dev

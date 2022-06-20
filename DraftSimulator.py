@@ -24,7 +24,7 @@ class DraftSimulator:
     fake = Faker()
 
     def __post_init__(self):
-        self.draft_order = self.db_handler.get_draft_picks(self.draft_year)
+        self.draft_order = self.db_handler.get_draft_picks(self.draft_year, self.simulation_id)
 
     def simulate_draft(self):
         self.model_draft()

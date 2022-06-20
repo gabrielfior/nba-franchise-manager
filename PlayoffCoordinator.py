@@ -79,13 +79,7 @@ class PlayoffCoordinator:
         self.db_handler.delete_games(games_to_clean_up)
 
     def simulate_games(self, round: GameTypes):
-        # read from DB and round matches
-        games = self.db_handler.get_games_by_game_type(self.simulation_id, round)
-        # for loop, simulate games
-        players: List[PlayerDb] = self.db_handler.get_all(PlayerDb)
-        for game in games:
-            self.game_simulator.simulate_game(game, players)
-        self.db_handler.write_entities(games)
+        self.game_simulator.simulate_game_type(self.simulation_id, self.year, round)
 
     def generate_games_for_matchup(self, round_identifier, team_a: TeamDb, team_b: TeamDb):
         # Generate 2-2-1-1-1 games (home vs away)

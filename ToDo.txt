@@ -13,20 +13,51 @@ To be implemented:
         (OK)-> Mean = average of player
         (OK)-> Std -> linspace : for 30 points it's 30%, for 10 pts 50%, for 3 pts 100% - as approximation based on 3 values
         (OK)-> See analysis_points_scored_per_game.ipynb
--> Write initial skeleton of thesis with main points
-    -> Send Max for initial review
--> Process after season was ended
-    (We want players' metrics, what does a team look like)
-    -> Calculate win shares for each player of the championship team
-    -> Calculate players with points per game
-    -> Save metrics into table
-    -> Repeat for each team
+(OK) -> Write initial skeleton of thesis with main points
+    (OK) -> Send Max for initial review
+-> Update thesis to match what was planned on project work
+
 -> Model draft pick according to statistical distribution of previous drafts
     -> Add age of each draft pick
-    -> Add evolution of stats according to age
--> Model each player decline with age after every season
--> Do statistical analysis on championship teams -> what contribution is more important? Draft, previously signed players, trades?
-    -> How many players with ppg > 20 a team needs?
-    -> Think of additional questions...
--> If enough time: simulate games with more sophisticated logic (e.g. RAPTOR)
+-> Model players scoring avg better
+    -> Add aging as a criteria for reducing/incresing scoring output
+    -> Do that both for non- and drafted players
+-> Run simulation 50k times (less in the beginning when finding metrics)
+    -> Group results of championship teams
+    -> Identify relevant metrics
+        -> Dashboard:
+            -> We have the data of 50k simulations * 5 years. Plot metrics like:
+                -> 95% of championship teams have 2+ players scoring 20ppg
+                -> 50% of teams have 1 drafted player with win share ?
+                -> ?Salary cap
+                -> ?-> Players with > 10 rebounds per game?
 
+
+-> If enough time:
+    -> Simulate games with more sophisticated logic (e.g. RAPTOR)
+    -> Model each player decline with age after every season
+    -> Add trades between players
+    -> Add free agent signings
+
+====================================
+Simplifications to be considered
+
+-> Trades
+    -> Respecting trade constraints in the NBA is quite hard (salary cap wise, motivation, etc), hence we simulate that by random trades that respect some conditions (e.g. salary match roughly or "talent level" is roughly conserved)
+
+-> New signings
+    -> We neglect this as this would be a trade for player <> cash, where talent level is not conserved. Candidate for future work.
+
+-> Game simulation
+    -> Simply copy RAPTOR or other game simulation option, add theory to introduction
+
+-> Draft simulation
+    -> Get stats over 5Y period from previous drafts
+    -> Each draft position (1-60) has a distribution (for PTS, REBS, ASSISTS)
+    -> Each draft ball draws from said distribution
+
+-> How to account for "what contributed to this team winning championship"
+    -> Calculate win shares for each player
+    -> Associate player with given "strategy" -> player previously on team, player traded there, player drafted
+
+-> Compile conditions we are not incorporating in simulations and add as suggestion for future work.
