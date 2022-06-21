@@ -7,4 +7,17 @@
     - https://docs.pytest.org/en/stable/writing_plugins.html
 """
 
-# import pytest
+import pytest
+
+from GameSimulator import GameSimulator
+from db.DBHandler import DBHandler
+
+@pytest.fixture()
+def mock_simulation_id():
+    return 'abc'
+
+@pytest.fixture()
+def game_simulator(mock_simulation_id):
+    db_handler = DBHandler()
+    gs = GameSimulator(db_handler, mock_simulation_id)
+    return gs

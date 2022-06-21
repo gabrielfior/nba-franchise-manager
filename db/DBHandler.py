@@ -1,3 +1,5 @@
+import os
+import pathlib
 from typing import List
 
 import sqlalchemy
@@ -16,7 +18,12 @@ from enums import GameTypes
 class DBHandler:
 
     def __init__(self):
-        self.engine = create_engine('sqlite:///nba_manager.db', echo=False)
+
+        db_filename = 'nba_manager.db'
+        db_location = str(
+            pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath(db_filename).absolute())
+
+        self.engine = create_engine('sqlite:///{}'.format(db_location), echo=False)
         self.Session = sessionmaker(bind=self.engine)
 
     def get_draft_picks(self, year, simulation_id):
@@ -115,9 +122,6 @@ class DBHandler:
     def get_standings_by_simulation_id(self, simulation_id: str):
         return self.get_all(StandingDb, [('simulation_id', simulation_id)],
                             [('conference', 'asc'), ('position', 'asc')])
-
-    def get_players_by_team(self, team_id) -> List[PlayerDb]:
-        return self.get_all(PlayerDb, [('team_id', team_id)])
 
     def get_players_for_season(self, simulation_id: str, year: int):
         with self.Session.begin() as session:
