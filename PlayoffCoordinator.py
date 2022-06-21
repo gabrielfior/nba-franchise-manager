@@ -94,5 +94,4 @@ class PlayoffCoordinator:
                           game_type=round_identifier.value)
             games.append(game)
         # Write games into DB
-        self.logger.logger.debug("Writing matchup {} - {}".format(team_a, team_b))
         self.db_handler.write_entities(games)

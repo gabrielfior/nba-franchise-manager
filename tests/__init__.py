@@ -1,0 +1,1 @@
+from db.models.models import mapper_registry

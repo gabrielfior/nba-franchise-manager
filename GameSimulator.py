@@ -67,7 +67,7 @@ class GameSimulator:
         for away_player in away_players:
             points_scored = self.simulate_points_by_player(away_player)
             away_team_points += points_scored
-            all_game_stats.append(self.build_game_stats(game, home_player, points_scored))
+            all_game_stats.append(self.build_game_stats(game, away_player, points_scored))
 
         if home_team_points == away_team_points:
             raise GameTiedException()

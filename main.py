@@ -6,7 +6,7 @@ if __name__ == "__main__":
     db_handler = DBHandler()
     start_year = 2017
     is_benchmark = True
-    num_simulations = 100
+    num_simulations = 10
     years_to_simulate = 5
 
     s = ScenarioSimulator(db_handler, start_year, is_benchmark=True)
