@@ -38,7 +38,7 @@ def get_team_short_names(input_data) -> dict:
 def read_initial_csv() -> pd.DataFrame:
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    filename = 'players_202122.csv'
+    filename = 'players_2016_until_2022.csv'
     file_location = os.path.join(__location__, filename)
     return pd.read_csv(file_location)
 
@@ -47,11 +47,13 @@ def get_players(team_dict, players_df: pd.DataFrame) -> List[PlayerDb]:
     players = []
     for player_tuple in players_df.itertuples():
         team_db = team_dict[player_tuple.full_name_team]
-        p = PlayerDb(year_drafted=-1,
+        year_drafted = int(player_tuple.SEASON_ID[:4])
+        p = PlayerDb(year_drafted=year_drafted,
                      name=player_tuple.full_name_player,
-                     points_per_game=player_tuple.PTS_per_game,
-                     rebounds_per_game=player_tuple.REB_per_game,
-                     assists_per_game=player_tuple.AST_per_game,
+                     points_per_game=player_tuple.PTS_PER_GAME,
+                     rebounds_per_game=player_tuple.REB_PER_GAME,
+                     assists_per_game=player_tuple.AST_PER_GAME,
+                     age=player_tuple.PLAYER_AGE,
                      team=team_db,
                      team_id=team_db.id,
                      simulation_id=None)

@@ -15,7 +15,7 @@ To be implemented:
         (OK)-> See analysis_points_scored_per_game.ipynb
 (OK) -> Write initial skeleton of thesis with main points
     (OK) -> Send Max for initial review
--> Update thesis to match what was planned on project work
+(OK) -> Update thesis to match what was planned on project work
 
 -> Model draft pick according to statistical distribution of previous drafts
     -> Add age of each draft pick

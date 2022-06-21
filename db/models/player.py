@@ -19,6 +19,7 @@ class PlayerDb:
     team: TeamDb = field(metadata={"sa": relationship("TeamDb")})
 
     year_drafted: int = field(metadata={"sa": Column(Integer, nullable=False)})
+    age: int = field(metadata={"sa": Column(Integer, nullable=False)})
     points_per_game: float = field(metadata={"sa": Column(Float, nullable=False)})
     rebounds_per_game: float = field(metadata={"sa": Column(Float, nullable=False)})
     assists_per_game: float = field(metadata={"sa": Column(Float, nullable=False)})
