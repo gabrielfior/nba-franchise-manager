@@ -1,18 +1,15 @@
-import time
-
+from ScenarioManager import ScenarioManager
 from ScenarioSimulator import ScenarioSimulator
 from db.DBHandler import DBHandler
 
 if __name__ == "__main__":
-
-    start = time.time()
     db_handler = DBHandler()
-    start_year = 2021
+    start_year = 2017
+    is_benchmark = True
+    num_simulations = 100
+    years_to_simulate = 5
 
-    #simulation_id = '29b61f39-a87b-42f7-864f-8bb7c11e5a18'
-    #print ('simulating ID {}'.format(simulation_id))
-
-    s = ScenarioSimulator(db_handler, start_year=start_year)
-    s.simulate_scenario(2)
-
-    print ('finished - time elapsed (s) {}'.format(time.time() - start))
+    s = ScenarioSimulator(db_handler, start_year, is_benchmark=True)
+    sm = ScenarioManager(db_handler=db_handler, start_year=start_year, years_to_simulate=years_to_simulate,
+                         num_simulations=num_simulations, is_benchmark=is_benchmark)
+    sm.simulate_scenarios()

@@ -7,6 +7,7 @@ from db.models.game_stats import GameStatsDb
 
 from db.models.player import PlayerDb
 from db.models.playoff_bracket import PlayoffBracketDb
+from db.models.scenario import ScenarioDb
 from db.models.standing import StandingDb
 from db.models.team import TeamDb
 
@@ -19,6 +20,7 @@ mapper_registry.mapped(StandingDb)
 mapper_registry.mapped(GameMapperDb)
 mapper_registry.mapped(PlayoffBracketDb)
 mapper_registry.mapped(GameStatsDb)
+mapper_registry.mapped(ScenarioDb)
 
 
 # ToDo - Add draft positioning table, for first year should be hardcoded

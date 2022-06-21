@@ -20,7 +20,7 @@ class GameSimulator:
     db_handler: DBHandler
     simulation_id: str
 
-    def simulate_game_type(self, simulation_id, year, game_type = GameTypes.REGULAR_SEASON):
+    def simulate_game_type(self, simulation_id, year, game_type=GameTypes.REGULAR_SEASON):
         games = self.db_handler.get_games_by_game_type(self.simulation_id, game_type)
         players: List[PlayerDb] = self.db_handler.get_players_for_season(simulation_id, year)
         game_stats_to_write = []
@@ -29,7 +29,6 @@ class GameSimulator:
             game_stats_to_write.extend(all_game_stats)
         self.db_handler.write_entities(games)
         self.db_handler.write_entities(game_stats_to_write)
-
 
     def simulate_game(self, game: GameDb, players: List[PlayerDb]) -> List[GameStatsDb]:
         """
@@ -55,6 +54,10 @@ class GameSimulator:
         home_team_points = 0
         away_team_points = 0
         all_game_stats = []
+
+        if len(home_players) == 0 or len(away_players) == 0:
+            raise Exception("No players found for team.\n Home players - {} \n Away players - {}".format(home_players,
+                                                                                                         away_players))
 
         for home_player in home_players:
             points_scored = self.simulate_points_by_player(home_player)

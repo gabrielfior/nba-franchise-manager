@@ -1,14 +1,11 @@
 import dataclasses
 from datetime import date
-from typing import List
-
-from loguru import logger
 
 from GameSimulator import GameSimulator
+from Logger import Logger
 from PlayoffBracket import PlayoffBracket
 from db.DBHandler import DBHandler
 from db.models.game import GameDb
-from db.models.player import PlayerDb
 from db.models.team import TeamDb
 from enums import GameTypes
 from helpers import random_date
@@ -20,6 +17,7 @@ class PlayoffCoordinator:
     simulation_id: str
     year: int
     game_simulator: GameSimulator
+    logger = Logger()
 
     def __post_init__(self):
         # self.begin_of_regular_season = date(self.year, 11, 1)
@@ -61,7 +59,7 @@ class PlayoffCoordinator:
     def create_bracket(self) -> PlayoffBracket:
         # read from standings
         standings = self.db_handler.get_standings_by_simulation_id(self.simulation_id)
-        logger.info("Retrieved {} standings".format(len(standings)))
+        self.logger.logger.debug("Retrieved {} standings".format(len(standings)))
         pb = PlayoffBracket(self.simulation_id, self.year, standings)
         return pb
 
@@ -96,5 +94,5 @@ class PlayoffCoordinator:
                           game_type=round_identifier.value)
             games.append(game)
         # Write games into DB
-        logger.info("Writing matchup {} - {}".format(team_a, team_b))
+        self.logger.logger.debug("Writing matchup {} - {}".format(team_a, team_b))
         self.db_handler.write_entities(games)

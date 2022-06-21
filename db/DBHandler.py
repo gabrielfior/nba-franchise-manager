@@ -16,7 +16,7 @@ from enums import GameTypes
 class DBHandler:
 
     def __init__(self):
-        self.engine = create_engine('sqlite:///nba_manager.db', echo=True)
+        self.engine = create_engine('sqlite:///nba_manager.db', echo=False)
         self.Session = sessionmaker(bind=self.engine)
 
     def get_draft_picks(self, year, simulation_id):
@@ -32,11 +32,9 @@ class DBHandler:
             session.expunge_all()
             return entities
 
-
     def simulate_draft_lottery(self, year):
         # ToDo - Generate draft picks for next year using previous years`s standings.
         pass
-
 
     def store_drafted_players(self, draftees: List, year_drafted: int):
         # List[(int, Player, team_id)]
@@ -46,13 +44,11 @@ class DBHandler:
             session.commit()
         print('committed')
 
-
     def get_teams(self) -> List[TeamDb]:
         with self.Session.begin() as session:
             teams = session.query(TeamDb).order_by(TeamDb.id.asc()).all()
             session.expunge_all()
         return teams
-
 
     def get_all(self, cls, filters: List[tuple] = [], order_by: List[tuple] = []) -> List[object]:
         with self.Session.begin() as session:
@@ -70,16 +66,13 @@ class DBHandler:
             session.expunge_all()
         return entities
 
-
     def get_teams_by_team_short_name(self) -> dict:
         teams_by_short_name = self._get_teams_by_func(lambda x: (x.short_name, x))
         return teams_by_short_name
 
-
     def get_teams_by_team_id(self) -> dict:
         teams_by_short_name = self._get_teams_by_func(lambda x: (x.id, x))
         return teams_by_short_name
-
 
     def _get_teams_by_func(self, func):
         with self.Session.begin() as session:
@@ -88,20 +81,17 @@ class DBHandler:
         teams_by_func = {func(i)[0]: func(i)[1] for i in teams}
         return teams_by_func
 
-
     def get_game_mappers(self) -> List[GameMapperDb]:
         with self.Session.begin() as session:
             game_mappers = session.query(GameMapperDb).all()
             session.expunge_all()
         return game_mappers
 
-
     def get_games(self, simulation_id):
         with self.Session.begin() as session:
             game_mappers = session.query(GameDb).filter(GameDb.simulation_id == simulation_id).all()
             session.expunge_all()
         return game_mappers
-
 
     def get_games_by_game_type(self, simulation_id, game_type: GameTypes):
         with self.Session.begin() as session:
@@ -110,13 +100,11 @@ class DBHandler:
             session.expunge_all()
         return games
 
-
     def write_entities(self, entities):
         with self.Session.begin() as session:
             # session.add_all(entities)
             session.bulk_save_objects(entities)
             session.commit()
-
 
     def delete_games(self, games: GameDb):
         with self.Session.begin() as session:
@@ -124,22 +112,20 @@ class DBHandler:
                 session.delete(g)
             session.commit()
 
-
     def get_standings_by_simulation_id(self, simulation_id: str):
         return self.get_all(StandingDb, [('simulation_id', simulation_id)],
                             [('conference', 'asc'), ('position', 'asc')])
 
-
     def get_players_by_team(self, team_id) -> List[PlayerDb]:
         return self.get_all(PlayerDb, [('team_id', team_id)])
 
-
     def get_players_for_season(self, simulation_id: str, year: int):
         with self.Session.begin() as session:
-            # get previous players + newly drafted players
+            # get previous players (simulation_id = None) + newly drafted players (simulation_id == simulation_id)
             entities = session.query(PlayerDb).filter(
-                or_(PlayerDb.year_drafted == -1,
-                    and_(PlayerDb.simulation_id == simulation_id,
-                         PlayerDb.year_drafted >= year))).all()
+                and_(
+                    or_(PlayerDb.simulation_id == None,
+                        PlayerDb.simulation_id == simulation_id),
+                    PlayerDb.year_drafted == year)).all()
             session.expunge_all()
         return entities
