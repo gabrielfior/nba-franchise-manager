@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from typing import List
 
 import numpy as np
+import pandas as pd
+from fastai.learner import load_learner
 from retry import retry
 
 from db.DBHandler import DBHandler
@@ -55,6 +57,9 @@ class GameSimulator:
         away_team_points = 0
         all_game_stats = []
 
+        # Also check https://github.com/PlayingNumbers/NBASimulator/blob/master/NBAFinalsSimulation.ipynb
+        # for simulating games
+
         if len(home_players) == 0 or len(away_players) == 0:
             raise Exception("No players found for team.\n Home players - {} \n Away players - {}".format(home_players,
                                                                                                          away_players))
@@ -96,3 +101,16 @@ class GameSimulator:
 
         std_dev = points_per_game * coef + intercept
         return points_per_game, std_dev
+
+    def simulate_game_using_dl(self):
+
+        dict1 = {'home_scorer_1': 10., 'home_scorer_2': 9., 'home_scorer_3': 8.,
+                 'home_scorer_4': 6., 'home_scorer_5': 5., 'away_scorer_1': 19., 'away_scorer_2': 18.,
+                 'away_scorer_3': 15., 'away_scorer_4': 13., 'away_scorer_5': 5.,
+                 'home_rebounder_1': 5., 'home_rebounder_2': 4., 'home_rebounder_3': 3, 'home_rebounder_4': 2.,
+                 'home_rebounder_5': 0.1, 'away_rebounder_1': 5, 'away_rebounder_2': 4,
+                 'away_rebounder_3': 3, 'away_rebounder_4': 2, 'away_rebounder_5': 1}
+
+        learner2 = load_learner('../models/model_gs.pt')
+        row, clas, probs = learner2.predict(pd.Series(dict1))
+        # clas.tolist() returns an int
