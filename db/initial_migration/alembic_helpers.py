@@ -12,6 +12,8 @@ from db.models.team import TeamDb
 
 
 # revision identifiers, used by Alembic.
+from enums import PlayerStatus
+
 
 def get_local_file_path(filename):
     location = os.path.realpath(
@@ -62,7 +64,8 @@ def get_players(team_dict, players_df: pd.DataFrame) -> List[PlayerDb]:
                      age=player_tuple.PLAYER_AGE,
                      team=team_db,
                      team_id=team_db.id,
-                     simulation_id=None)
+                     simulation_id=None,
+                     status=PlayerStatus.EXISTING.value)
         players.append(p)
     return players
 

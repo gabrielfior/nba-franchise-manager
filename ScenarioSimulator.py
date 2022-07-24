@@ -10,6 +10,7 @@ from PlayerManager import PlayerManager
 from PlayoffCoordinator import PlayoffCoordinator
 from ScheduleSimulator import ScheduleSimulator
 from StandingsCalculator import StandingsCalculator
+from TradeManager import TradeManager
 from db.DBHandler import DBHandler
 from enums import GameTypes
 
@@ -25,8 +26,9 @@ class ScenarioSimulator:
         self.simulation_id = str(uuid.uuid4())
 
     def simulate_scenario(self, n_years):
+
         PlayerManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
-        DraftPickManager(self.db_handler, self.simulation_id)
+        DraftPickManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
 
         for year in range(n_years):
             year_to_simulate = self.start_year + year
@@ -35,13 +37,12 @@ class ScenarioSimulator:
 
     def simulate_year(self, year: int):
 
-        PlayerManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
-        DraftPickManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
-
         if not self.is_benchmark:
             draft_simulator = DraftSimulator(self.db_handler, year, self.simulation_id)
             self.logger.logger.info('Starting simulate draft')
             draft_simulator.simulate_draft()
+
+        TradeManager(self.db_handler, self.simulation_id, year).execute_trades()
 
         self.logger.logger.info('Starting schedule simulator')
         ScheduleSimulator(self.db_handler, year, simulation_id=self.simulation_id).generate_schedule()

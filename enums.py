@@ -8,6 +8,13 @@ class GameTypes(Enum):
     CONF_FINALS = 'CONF_FINALS'
     FINALS = 'FINALS'
 
+
 class Conferences(Enum):
     EAST = 'EAST'
     WEST = 'WEST'
+
+
+class PlayerStatus(Enum):
+    TRADED = 'traded'
+    EXISTING = 'existing'
+    DRAFTED = 'drafted'

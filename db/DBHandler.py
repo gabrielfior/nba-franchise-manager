@@ -1,6 +1,6 @@
 import os
 import pathlib
-from typing import List
+from typing import List, Dict
 
 import sqlalchemy
 from sqlalchemy import create_engine, asc, desc, and_
@@ -13,7 +13,7 @@ from db.models.game_mapper import GameMapperDb
 from db.models.player import PlayerDb
 from db.models.standing import StandingDb
 from db.models.team import TeamDb
-from enums import GameTypes
+from enums import GameTypes, PlayerStatus
 
 
 class DBHandler:
@@ -24,7 +24,7 @@ class DBHandler:
             db_location = str(
                 pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath(db_filename).absolute())
 
-            self.engine = create_engine('sqlite:///{}'.format(db_location), echo=False)
+            self.engine = create_engine('sqlite:///{}'.format(db_location), echo=True)
         else:
             self.engine = engine
 
@@ -41,10 +41,6 @@ class DBHandler:
             if (len(entities) != 60):
                 raise Exception('Expected 60 draft picks')
             return entities
-
-    def simulate_draft_lottery(self, year):
-        # ToDo - Generate draft picks for next year using previous years`s standings.
-        pass
 
     def store_drafted_players(self, players_drafted: List[PlayerDb]):
         with self.Session.begin() as session:
@@ -137,3 +133,15 @@ class DBHandler:
 
     def get_draft_pick_stats(self):
         return self.get_all(DraftPickStatsDb)
+
+    def update_player_team(self, from_team_id: int, from_player_ids: List[int],
+                           to_team_id: int, to_player_ids: List[int], team_id_dict: Dict):
+        with self.Session.begin() as session:
+            # from team
+            session.query(PlayerDb).filter(PlayerDb.id.in_(from_player_ids)).update(
+                {'team_id': from_team_id, 'status': PlayerStatus.TRADED.value})
+            # to team
+            session.query(PlayerDb).filter(PlayerDb.id.in_(to_player_ids)).update(
+                {'team_id': to_team_id, 'status': PlayerStatus.TRADED.value})
+
+            session.commit()

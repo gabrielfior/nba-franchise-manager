@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from BaseManager import BaseManager
 from db.models.player import PlayerDb
+from enums import PlayerStatus
 
 
 @dataclass

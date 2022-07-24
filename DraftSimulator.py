@@ -7,6 +7,7 @@ from faker import Faker
 from db.DBHandler import DBHandler
 from db.models.models import DraftPickDb
 from db.models.player import PlayerDb
+from enums import PlayerStatus
 from models.draft_pick_stats import DraftPickStatsDb
 
 """
@@ -70,7 +71,8 @@ class DraftSimulator:
                          year_drafted=self.draft_year + year_number,
                          team=draft_pick.team, team_id=draft_pick.team_id,
                          simulation_id=self.simulation_id,
-                         age=19 + year_number)
+                         age=19 + year_number,
+                         status=PlayerStatus.DRAFTED.value)
             players.append(p)
         return players
 

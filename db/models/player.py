@@ -24,3 +24,4 @@ class PlayerDb:
     rebounds_per_game: float = field(metadata={"sa": Column(Float, nullable=False)})
     assists_per_game: float = field(metadata={"sa": Column(Float, nullable=False)})
     simulation_id: str = field(metadata={"sa": Column(String(250), nullable=True)})
+    status: str = field(metadata={"sa": Column(String(250), nullable=True)})
