@@ -6,7 +6,6 @@ from Logger import Logger
 from ScenarioSimulator import ScenarioSimulator
 from db.DBHandler import DBHandler
 from db.models.scenario import ScenarioDb
-from alive_progress import alive_bar
 
 
 @dataclass
@@ -18,7 +17,6 @@ class ScenarioManager:
     logger = Logger()
     is_benchmark: bool = False
 
-
     def __post_init__(self):
         self.scenario_group_id = str(uuid.uuid4())
 
@@ -26,17 +24,17 @@ class ScenarioManager:
         start = time.time()
         self.logger.logger.info("Simulating scenario group {}".format(self.scenario_group_id))
 
-        with alive_bar(self.num_simulations) as bar:
-            for simulation_idx in range(self.num_simulations):
-                s = ScenarioSimulator(self.db_handler, start_year=self.start_year, is_benchmark=self.is_benchmark)
+        for simulation_idx in range(self.num_simulations):
+            self.logger.logger.debug(f'simulation # {simulation_idx} / {self.num_simulations}')
 
-                self.logger.logger.info("Writing new scenario")
-                self.insert_scenario(s.simulation_id)
+            s = ScenarioSimulator(self.db_handler, start_year=self.start_year, is_benchmark=self.is_benchmark)
 
-                s.simulate_scenario(self.years_to_simulate)
-                bar()
+            self.logger.logger.info("Writing new scenario")
+            self.insert_scenario(s.simulation_id)
 
-        print('finished - time elapsed (s) {}'.format(time.time() - start))
+            s.simulate_scenario(self.years_to_simulate)
+
+        self.logger.logger.info('finished - time elapsed (s) {}'.format(time.time() - start))
 
     def insert_scenario(self, simulation_id):
         new_scenario = ScenarioDb(simulation_id=simulation_id, scenario_group_id=self.scenario_group_id)

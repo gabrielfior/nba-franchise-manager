@@ -8,14 +8,15 @@ from db.models.draft_pick import DraftPickDb
 class LotteryCoordinator:
     db_handler: DBHandler
     simulation_id: str
+    year: int
 
-    def generate_lottery(self, simulated_year):
+    def generate_lottery(self):
         """
         For simplicity reasons, we simply generate draft picks in reverse order to the previous year
         standings. In reality, it is a lottery, but the odds follow the same principle.
          """
         # get standings simulated year
-        standings = self.db_handler.get_standings_by_simulation_id(self.simulation_id)
+        standings = self.db_handler.get_standings_by_simulation_id_and_year(self.simulation_id, self.year)
         # generate draft order reverse to standings
         standings.sort(key=lambda x: x.position, reverse=True)
 
@@ -27,7 +28,7 @@ class LotteryCoordinator:
             draft_pick = DraftPickDb(team=standing.team,
                                  pick_number=pick_number + 1,
                                  team_id=standing.team.id,
-                                 year=simulated_year+1,
+                                 year=self.year+1,
                                  simulation_id=self.simulation_id)
             draft_picks.append(draft_pick)
 

@@ -13,13 +13,21 @@ from db.models.team import TeamDb
 
 # revision identifiers, used by Alembic.
 
-def read_initial_data() -> dict:
-    __location__ = os.path.realpath(
+def get_local_file_path(filename):
+    location = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    return os.path.join(location, filename)
+
+
+def read_initial_data() -> dict:
     filename = 'initial_data.json'
-    with open(os.path.join(__location__, filename), 'r') as x:
+    with open(get_local_file_path(filename), 'r') as x:
         d = json.load(x)
     return d
+
+def read_vegas_odds():
+    # ToDo
+    pass
 
 
 def get_team_names(input_data) -> dict:
@@ -36,12 +44,10 @@ def get_team_short_names(input_data) -> dict:
                                    short_name=i['shortName']) for i in teams}
 
 def read_initial_csv() -> pd.DataFrame:
-    __location__ = os.path.realpath(
-        os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    filename = 'players_2016_until_2022.csv'
-    file_location = os.path.join(__location__, filename)
-    return pd.read_csv(file_location)
+    return pd.read_csv(get_local_file_path('players_2016_until_2022.csv'))
 
+def read_draft_picks_scoring() -> pd.DataFrame:
+    return pd.read_csv(get_local_file_path('scoring_by_pick_number.csv'), header=[0,1], index_col=0)
 
 def get_players(team_dict, players_df: pd.DataFrame) -> List[PlayerDb]:
     players = []

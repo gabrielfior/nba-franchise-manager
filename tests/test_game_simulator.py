@@ -41,7 +41,8 @@ def test_game(game_simulator, mock_simulation_id):
     n_simulations = 100
     for simulation_idx in range(n_simulations):
         mock_game_db = GameFactory()
-        game_stats = game_simulator.simulate_game(mock_game_db, list(players.values()))
+        #game_stats = game_simulator.simulate_game(mock_game_db, list(players.values()))
+        game_stats = game_simulator.simulate_game_using_dl(mock_game_db, list(players.values()))
         sorted_game_stats = dict(sorted({players[g.player_id].name: g.points_scored for g in game_stats}.items(), key=lambda x: x[1], reverse=True))
         for k, v in players.items():
             if k in sorted_game_stats:

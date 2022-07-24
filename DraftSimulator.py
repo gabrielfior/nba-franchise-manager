@@ -1,4 +1,3 @@
-import uuid
 from dataclasses import dataclass, field
 from typing import List
 
@@ -8,6 +7,7 @@ from faker import Faker
 from db.DBHandler import DBHandler
 from db.models.models import DraftPickDb
 from db.models.player import PlayerDb
+from models.draft_pick_stats import DraftPickStatsDb
 
 """
 Class for simulating draft in a given year.
@@ -20,7 +20,7 @@ class DraftSimulator:
     draft_year: int
     simulation_id: str
     draft_order: List[DraftPickDb] = field(default_factory=list)
-    draft_result: List = field(default_factory=list)
+    players_drafted: List = field(default_factory=list)
     fake = Faker()
 
     def __post_init__(self):
@@ -39,23 +39,40 @@ class DraftSimulator:
         # returns 60 players with given attributes, determined solely by draft position.
         if not self.draft_order:
             raise Exception('No draft picks could be retrieved, maybe run_initial_data was not started.')
-        for draft_position, draft_pick in enumerate(self.draft_order):
-            player = self.model_player(draft_pick)
-            self.draft_result.append((draft_position, player, draft_pick.team_id))
 
-    def model_player(self, draft_pick: DraftPickDb) -> PlayerDb:
+        draft_pick_stats = self.db_handler.get_draft_pick_stats()
+
+        for draft_position, draft_pick in enumerate(self.draft_order):
+            players = self.model_player(draft_pick, draft_pick_stats)
+            self.players_drafted.extend(players)
+
+    def model_player(self, draft_pick: DraftPickDb, draft_pick_stats: List[DraftPickStatsDb]) -> List[PlayerDb]:
         # ToDo - Generate player`s statistics from draft_position using a distribution of 5 years players
         #  statistics stored in DB.
-        points_per_game = np.random.randint(0,2000)/100
-        rebounds_per_game = np.random.randint(0,2000)/100
-        assists_per_game = np.random.randint(0,2000)/100
-        return PlayerDb(name='{} {}'.format(self.fake.first_name_male(), self.fake.last_name()),
-                        points_per_game=points_per_game,
-                        rebounds_per_game=rebounds_per_game,
-                        assists_per_game=assists_per_game,
-                        year_drafted=self.draft_year,
-                        team=draft_pick.team, team_id=draft_pick.team_id,
-                        simulation_id=self.simulation_id)
+
+        players = []
+        first_name = self.fake.first_name_male()
+        last_name = self.fake.last_name()
+        for year_number in range(5):
+            # Each player drafted is stored 5 times for him to be considered in all years.
+            stats = [i for i in draft_pick_stats if i.pick_number == draft_pick.pick_number and
+                     i.year == (year_number + 1)][0]
+            points_per_game = max(0, np.random.normal(stats.points_per_game_mean,
+                                                      scale=stats.points_per_game_std))
+            rebounds_per_game = max(0, np.random.normal(stats.rebounds_per_game_mean,
+                                                        scale=stats.rebounds_per_game_std))
+            assists_per_game = max(0, np.random.normal(stats.assists_per_game_mean,
+                                                       scale=stats.assists_per_game_std))
+            p = PlayerDb(name='{} {}'.format(first_name, last_name),
+                         points_per_game=points_per_game,
+                         rebounds_per_game=rebounds_per_game,
+                         assists_per_game=assists_per_game,
+                         year_drafted=self.draft_year + year_number,
+                         team=draft_pick.team, team_id=draft_pick.team_id,
+                         simulation_id=self.simulation_id,
+                         age=19 + year_number)
+            players.append(p)
+        return players
 
     def store_drafted_players(self):
-        self.db_handler.store_drafted_players(self.draft_result, self.draft_year)
+        self.db_handler.store_drafted_players(self.players_drafted)

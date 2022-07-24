@@ -58,7 +58,7 @@ class PlayoffCoordinator:
 
     def create_bracket(self) -> PlayoffBracket:
         # read from standings
-        standings = self.db_handler.get_standings_by_simulation_id(self.simulation_id)
+        standings = self.db_handler.get_standings_by_simulation_id_and_year(self.simulation_id, self.year)
         self.logger.logger.debug("Retrieved {} standings".format(len(standings)))
         pb = PlayoffBracket(self.simulation_id, self.year, standings)
         return pb
@@ -71,7 +71,7 @@ class PlayoffCoordinator:
             self.generate_games_for_matchup(round_identifier, team_dict[team_a_node.value], team_dict[team_b_node.value])
 
     def update_bracket(self, round_identifier: GameTypes, bracket: PlayoffBracket):
-        games = self.db_handler.get_games_by_game_type(self.simulation_id, round_identifier)
+        games = self.db_handler.get_games_by_game_type(self.simulation_id, round_identifier, self.year)
 
         games_to_clean_up = bracket.update_bracket(round_identifier, games)
         self.db_handler.delete_games(games_to_clean_up)

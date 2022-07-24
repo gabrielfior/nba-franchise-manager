@@ -3,10 +3,11 @@ import pathlib
 from typing import List
 
 import sqlalchemy
-from sqlalchemy import create_engine, asc, desc, and_, or_
+from sqlalchemy import create_engine, asc, desc, and_
 from sqlalchemy.orm import sessionmaker, class_mapper
 
 from db.models.draft_pick import DraftPickDb
+from db.models.draft_pick_stats import DraftPickStatsDb
 from db.models.game import GameDb
 from db.models.game_mapper import GameMapperDb
 from db.models.player import PlayerDb
@@ -17,39 +18,39 @@ from enums import GameTypes
 
 class DBHandler:
 
-    def __init__(self):
+    def __init__(self, engine=None):
+        if engine is None:
+            db_filename = 'nba_manager.db'
+            db_location = str(
+                pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath(db_filename).absolute())
 
-        db_filename = 'nba_manager.db'
-        db_location = str(
-            pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath(db_filename).absolute())
+            self.engine = create_engine('sqlite:///{}'.format(db_location), echo=False)
+        else:
+            self.engine = engine
 
-        self.engine = create_engine('sqlite:///{}'.format(db_location), echo=False)
         self.Session = sessionmaker(bind=self.engine)
 
     def get_draft_picks(self, year, simulation_id):
         with self.Session.begin() as session:
             entities = session.query(DraftPickDb).filter(
                 and_(DraftPickDb.year == year,
-                     or_(
-                         DraftPickDb.simulation_id == None,
-                         DraftPickDb.simulation_id == simulation_id,
-                     )
+                     DraftPickDb.simulation_id == simulation_id,
                      )).order_by(DraftPickDb.id.asc()).all()
 
             session.expunge_all()
+            if (len(entities) != 60):
+                raise Exception('Expected 60 draft picks')
             return entities
 
     def simulate_draft_lottery(self, year):
         # ToDo - Generate draft picks for next year using previous years`s standings.
         pass
 
-    def store_drafted_players(self, draftees: List, year_drafted: int):
-        # List[(int, Player, team_id)]
+    def store_drafted_players(self, players_drafted: List[PlayerDb]):
         with self.Session.begin() as session:
-            for draft_position, player, team_id in draftees:
+            for player in players_drafted:
                 session.add(player)
             session.commit()
-        print('committed')
 
     def get_teams(self) -> List[TeamDb]:
         with self.Session.begin() as session:
@@ -100,9 +101,10 @@ class DBHandler:
             session.expunge_all()
         return game_mappers
 
-    def get_games_by_game_type(self, simulation_id, game_type: GameTypes):
+    def get_games_by_game_type(self, simulation_id, game_type: GameTypes, year: int):
         with self.Session.begin() as session:
             games = session.query(GameDb).filter(sqlalchemy.and_(GameDb.simulation_id == simulation_id,
+                                                                 GameDb.year == year,
                                                                  GameDb.game_type == game_type.value)).all()
             session.expunge_all()
         return games
@@ -119,17 +121,19 @@ class DBHandler:
                 session.delete(g)
             session.commit()
 
-    def get_standings_by_simulation_id(self, simulation_id: str):
-        return self.get_all(StandingDb, [('simulation_id', simulation_id)],
+    def get_standings_by_simulation_id_and_year(self, simulation_id: str, year: int):
+        return self.get_all(StandingDb,
+                            [('simulation_id', simulation_id), ('year', year)],
                             [('conference', 'asc'), ('position', 'asc')])
 
     def get_players_for_season(self, simulation_id: str, year: int):
         with self.Session.begin() as session:
             # get previous players (simulation_id = None) + newly drafted players (simulation_id == simulation_id)
             entities = session.query(PlayerDb).filter(
-                and_(
-                    or_(PlayerDb.simulation_id == None,
-                        PlayerDb.simulation_id == simulation_id),
-                    PlayerDb.year_drafted == year)).all()
+                and_(PlayerDb.simulation_id == simulation_id,
+                     PlayerDb.year_drafted == year)).all()
             session.expunge_all()
         return entities
+
+    def get_draft_pick_stats(self):
+        return self.get_all(DraftPickStatsDb)
