@@ -1,18 +1,11 @@
-import uuid
-
-from DraftSimulator import DraftSimulator
-from GameSimulator import GameSimulator
-from ScenarioSimulator import ScenarioSimulator
-from ScheduleSimulator import ScheduleSimulator
-
 from db.DBHandler import DBHandler
 from db.initial_migration.initial_data_filler import InitialDataFiller
 
 if __name__ == "__main__":
-    delete_initial_data = True
+    delete_initial_data = False
     create_initial_data = True
 
-    db_handler = DBHandler()
+    db_handler = DBHandler(echo=True)
     draft_year = 2021
 
     # add initial data

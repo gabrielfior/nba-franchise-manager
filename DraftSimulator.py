@@ -8,7 +8,7 @@ from db.DBHandler import DBHandler
 from db.models.models import DraftPickDb
 from db.models.player import PlayerDb
 from enums import PlayerStatus
-from models.draft_pick_stats import DraftPickStatsDb
+from db.models.draft_pick_stats import DraftPickStatsDb
 
 """
 Class for simulating draft in a given year.

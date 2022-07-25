@@ -13,23 +13,27 @@ class InitialDataFiller:
 
     def insert_initial_data(self):
         input_data = read_initial_data()
-        team_dict = get_team_names(input_data)
+        team_dict = get_team_names(input_data) #team_short_name -> TeamDb
         players_df = read_initial_csv()
         draft_picks_stats = read_draft_picks_scoring()
         draft_pick_stats_db = self.create_draft_pick_stats(draft_picks_stats)
         players = get_players(team_dict, players_df)
         draft_picks = get_draft_picks(input_data, team_dict, self.draft_year, simulation_id=None)
 
-        # game_mapper
-        game_mappings = get_game_mappings()
-
         with self.db_handler.Session() as session:
             session.add_all(team_dict.values())
             session.add_all(players)
             session.add_all(draft_picks)
-            session.add_all(game_mappings)
             session.add_all(draft_pick_stats_db)
 
+            session.commit()
+
+        # game_mapper
+        teams_by_team_short_name = self.db_handler.get_teams_by_team_short_name()
+        game_mappings = get_game_mappings(teams_by_team_short_name)
+
+        with self.db_handler.Session() as session:
+            session.add_all(game_mappings)
             session.commit()
 
     def delete_initial_data(self):

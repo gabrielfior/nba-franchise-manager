@@ -1,7 +1,8 @@
 import json
 import os
-from typing import List
 import pathlib
+from typing import List, Dict
+
 import pandas as pd
 from pbpstats.data_loader import DataNbaScheduleWebLoader, DataNbaScheduleLoader
 
@@ -9,8 +10,6 @@ from db.models.draft_pick import DraftPickDb
 from db.models.game_mapper import GameMapperDb
 from db.models.player import PlayerDb
 from db.models.team import TeamDb
-
-
 # revision identifiers, used by Alembic.
 from enums import PlayerStatus
 
@@ -26,6 +25,7 @@ def read_initial_data() -> dict:
     with open(get_local_file_path(filename), 'r') as x:
         d = json.load(x)
     return d
+
 
 def read_vegas_odds():
     # ToDo
@@ -45,11 +45,14 @@ def get_team_short_names(input_data) -> dict:
                                    division=i['division'],
                                    short_name=i['shortName']) for i in teams}
 
+
 def read_initial_csv() -> pd.DataFrame:
     return pd.read_csv(get_local_file_path('players_2016_until_2022.csv'))
 
+
 def read_draft_picks_scoring() -> pd.DataFrame:
-    return pd.read_csv(get_local_file_path('scoring_by_pick_number.csv'), header=[0,1], index_col=0)
+    return pd.read_csv(get_local_file_path('scoring_by_pick_number.csv'), header=[0, 1], index_col=0)
+
 
 def get_players(team_dict, players_df: pd.DataFrame) -> List[PlayerDb]:
     players = []
@@ -74,7 +77,7 @@ def get_draft_picks(input_data, teams_dict, year, simulation_id) -> List[DraftPi
     draft_picks = []
     for pick_number, team_name in enumerate(input_data['draft_positions']):
         draft_pick = DraftPickDb(team=teams_dict[team_name],
-                                 pick_number=pick_number+1,
+                                 pick_number=pick_number + 1,
                                  team_id=teams_dict[team_name].id,
                                  year=year,
                                  simulation_id=simulation_id)
@@ -82,7 +85,7 @@ def get_draft_picks(input_data, teams_dict, year, simulation_id) -> List[DraftPi
     return draft_picks
 
 
-def get_game_mappings():
+def get_game_mappings(teams_by_team_short_name: Dict):
     game_mappers = []
     current_dir = pathlib.Path(__file__).parent
     w = DataNbaScheduleWebLoader(current_dir.joinpath('pbpstats_data'))
@@ -90,8 +93,8 @@ def get_game_mappings():
 
     df = pd.DataFrame([i.data for i in schedule_loader.items])
     for row_index, row_tuple in df.iterrows():
-        gm = GameMapperDb(home_team_short_name=row_tuple['home_team_abbreviation'],
-                          away_team_short_name=row_tuple['away_team_abbreviation'])
+        home_team = teams_by_team_short_name[row_tuple['home_team_abbreviation']]
+        away_team = teams_by_team_short_name[row_tuple['away_team_abbreviation']]
+        gm = GameMapperDb(home_team_id=home_team.id, away_team_id=away_team.id)
         game_mappers.append(gm)
     return game_mappers
-

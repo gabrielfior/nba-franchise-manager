@@ -1,5 +1,3 @@
-import os
-import pathlib
 from typing import List, Dict
 
 import sqlalchemy
@@ -18,13 +16,10 @@ from enums import GameTypes, PlayerStatus
 
 class DBHandler:
 
-    def __init__(self, engine=None):
+    def __init__(self, engine=None, echo=False):
         if engine is None:
-            db_filename = 'nba_manager.db'
-            db_location = str(
-                pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath(db_filename).absolute())
-
-            self.engine = create_engine('sqlite:///{}'.format(db_location), echo=True)
+            db_url = 'postgresql://postgres:postgres@localhost:5432/nba'
+            self.engine = create_engine(db_url, echo=echo)
         else:
             self.engine = engine
 

@@ -26,13 +26,13 @@ class ScheduleSimulator:
 
     def generate_schedule(self) -> None:
         # read teams from DB
-        team_maps = self.db_handler.get_teams_by_team_short_name()
+        team_maps = self.db_handler.get_teams_by_team_id()
         game_mappers = self.db_handler.get_game_mappers()
         games = []  # tuple - (home_team_id, away_team_id, game_category)
 
         for game_mapper in game_mappers:
-            home_team = team_maps[game_mapper.home_team_short_name]
-            away_team = team_maps[game_mapper.away_team_short_name]
+            home_team = team_maps[game_mapper.home_team_id]
+            away_team = team_maps[game_mapper.away_team_id]
             game = GameDb(year=self.year, home_team=home_team, home_team_id=home_team.id,
                           away_team=away_team, away_team_id=away_team.id,
                           game_date=self.get_random_game_date(), simulation_id=self.simulation_id,
