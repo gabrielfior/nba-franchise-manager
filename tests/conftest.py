@@ -14,7 +14,7 @@ from db.DBHandler import DBHandler
 
 @pytest.fixture()
 def mock_simulation_id():
-    return 'abc'
+    return None
 
 @pytest.fixture()
 def game_simulator(mock_simulation_id):
