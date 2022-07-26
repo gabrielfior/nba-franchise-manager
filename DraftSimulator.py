@@ -48,8 +48,6 @@ class DraftSimulator:
             self.players_drafted.extend(players)
 
     def model_player(self, draft_pick: DraftPickDb, draft_pick_stats: List[DraftPickStatsDb]) -> List[PlayerDb]:
-        # ToDo - Generate player`s statistics from draft_position using a distribution of 5 years players
-        #  statistics stored in DB.
 
         players = []
         first_name = self.fake.first_name_male()

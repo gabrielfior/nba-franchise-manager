@@ -6,6 +6,7 @@ from DraftSimulator import DraftSimulator
 from GameSimulator import GameSimulator
 from Logger import Logger
 from LotteryCoordinator import LotteryCoordinator
+from PlayerExpander import PlayerExpander
 from PlayerManager import PlayerManager
 from PlayoffCoordinator import PlayoffCoordinator
 from ScheduleSimulator import ScheduleSimulator
@@ -29,6 +30,10 @@ class ScenarioSimulator:
 
         PlayerManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
         DraftPickManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
+        # ToDo - Copy stats of each player for years [self.start_year+1, self.start_year+(n_years)-1]
+        if not self.is_benchmark:
+            # Copy player stats to subsequent years
+            PlayerExpander(self.db_handler, self.simulation_id, self.start_year, n_years).expand_entities()
 
         for year in range(n_years):
             year_to_simulate = self.start_year + year
