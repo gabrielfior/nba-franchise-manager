@@ -1,3 +1,4 @@
+import os
 from typing import List, Dict
 
 import sqlalchemy
@@ -12,13 +13,16 @@ from db.models.player import PlayerDb
 from db.models.standing import StandingDb
 from db.models.team import TeamDb
 from enums import GameTypes, PlayerStatus
-
+from dotenv import load_dotenv
+load_dotenv()
 
 class DBHandler:
 
     def __init__(self, engine=None, echo=False):
         if engine is None:
-            db_url = 'postgresql://postgres:postgres@localhost:5432/nba'
+            db_url = os.environ.get('AWS_DB_URL')
+            if db_url is None:
+                raise Exception('AWS_DB_URL not defined')
             self.engine = create_engine(db_url, echo=echo)
         else:
             self.engine = engine
