@@ -17,8 +17,8 @@ To be implemented:
     (OK) -> Send Max for initial review
 (OK) -> Update thesis to match what was planned on project work
 
--> Model draft pick according to statistical distribution of previous drafts
-    -> Add age of each draft pick
+(OK) -> Model draft pick according to statistical distribution of previous drafts
+    (OK) -> Add age of each draft pick
 -> Model players scoring avg better
     -> Add aging as a criteria for reducing/incresing scoring output
     -> Do that both for non- and drafted players
@@ -29,7 +29,7 @@ To be implemented:
             -> We have the data of 50k simulations * 5 years. Plot metrics like:
                 -> 95% of championship teams have 2+ players scoring 20ppg
                 -> 50% of teams have 1 drafted player with win share ?
-                -> ?Salary cap
+                (NO) -> ?Salary cap
                 -> ?-> Players with > 10 rebounds per game?
 
 

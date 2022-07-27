@@ -30,7 +30,6 @@ class ScenarioSimulator:
 
         PlayerManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
         DraftPickManager(self.db_handler, self.simulation_id).duplicate_entities_without_sim_id()
-        # ToDo - Copy stats of each player for years [self.start_year+1, self.start_year+(n_years)-1]
         if not self.is_benchmark:
             # Copy player stats to subsequent years
             PlayerExpander(self.db_handler, self.simulation_id, self.start_year, n_years).expand_entities()
