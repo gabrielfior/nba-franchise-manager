@@ -46,7 +46,8 @@ class ScenarioSimulator:
             self.logger.logger.info('Starting simulate draft')
             draft_simulator.simulate_draft()
 
-        TradeManager(self.db_handler, self.simulation_id, year).execute_trades()
+            # We only execute trades if it is NOT a benchmark, otherwise the teams are deterministically defined.
+            TradeManager(self.db_handler, self.simulation_id, year).execute_trades()
 
         self.logger.logger.info('Starting schedule simulator')
         ScheduleSimulator(self.db_handler, year, simulation_id=self.simulation_id).generate_schedule()

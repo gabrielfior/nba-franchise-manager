@@ -1,8 +1,8 @@
 import dataclasses
 
-import numpy as np
 import pandas as pd
 
+from RandomNumberGenerator import RandomNumberGenerator
 from db.DBHandler import DBHandler
 from db.models.standing import StandingDb
 from enums import Conferences
@@ -13,6 +13,7 @@ class StandingsCalculator:
     db_handler: DBHandler
     simulation_id: str
     year: int
+    random_number_generator = RandomNumberGenerator()
 
     def calculate_standings(self):
         self.retrieve_games_and_teams()
@@ -50,7 +51,7 @@ class StandingsCalculator:
         grouped_standings = ranked_wins.groupby(by='id')['team_won'].apply(list).sort_index(ascending=False)
         ordered_teams = {Conferences.EAST.value: [], Conferences.WEST.value: []}
         for win_total, team_ids in grouped_standings.iteritems():
-            np.random.shuffle(team_ids)
+            self.random_number_generator.generator.shuffle(team_ids)
             for team_id in team_ids:
                 team_item = self.teams_dict[team_id]
                 conference = team_item.conference

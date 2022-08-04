@@ -2,17 +2,19 @@ import pathlib
 from dataclasses import dataclass
 from typing import List, Tuple
 
-import numpy as np
 import pandas as pd
 from fastai.learner import load_learner
 
 from Logger import Logger
+from RandomNumberGenerator import RandomNumberGenerator
 from db.DBHandler import DBHandler
 from db.models.game import GameDb
 from db.models.game_stats import GameStatsDb
 from db.models.player import PlayerDb
 from enums import GameTypes
 
+import lib_platform
+if not lib_platform.is_platform_linux: pathlib.PosixPath = pathlib.WindowsPath
 
 class GameTiedException(Exception):
     pass
@@ -24,6 +26,7 @@ class GameSimulator:
     simulation_id: str
     model_name: str = "model_gs.pt"
     logger = Logger()
+    random_number_generator = RandomNumberGenerator()
 
     def __post_init__(self):
         self._load_learner()
@@ -50,7 +53,7 @@ class GameSimulator:
         return game_stats
 
     def _load_learner(self):
-        curr_dir = pathlib.Path(__file__).parent.resolve()
+        curr_dir = pathlib.PosixPath(__file__).parent.resolve()
         self.learner = load_learner(curr_dir.joinpath('models', self.model_name))  # './models/model_gs.pt')
 
     def prepare_stats_df(self, games: List[GameDb], players: List[PlayerDb]):
@@ -97,7 +100,7 @@ class GameSimulator:
 
     def consolidate_games(self, games: List[GameDb], preds: List[Tuple]):
 
-        random_numbers = np.random.random(len(games))
+        random_numbers = self.random_number_generator.generator.random(len(games))
 
         for game, prob, random_num in zip(games, preds, random_numbers):
 

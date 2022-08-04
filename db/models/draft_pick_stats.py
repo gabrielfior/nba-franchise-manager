@@ -1,9 +1,6 @@
 from dataclasses import dataclass, field
 
-from sqlalchemy import Column, Integer, ForeignKey, String, Float
-from sqlalchemy.orm import relationship
-
-from db.models.team import TeamDb
+from sqlalchemy import Column, Integer, Float
 
 
 @dataclass

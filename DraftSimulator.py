@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List
 
-import numpy as np
 from faker import Faker
 
+from RandomNumberGenerator import RandomNumberGenerator
 from db.DBHandler import DBHandler
 from db.models.models import DraftPickDb
 from db.models.player import PlayerDb
@@ -23,6 +23,7 @@ class DraftSimulator:
     draft_order: List[DraftPickDb] = field(default_factory=list)
     players_drafted: List = field(default_factory=list)
     fake = Faker()
+    random_number_generator = RandomNumberGenerator()
 
     def __post_init__(self):
         self.draft_order = self.db_handler.get_draft_picks(self.draft_year, self.simulation_id)
@@ -56,11 +57,11 @@ class DraftSimulator:
             # Each player drafted is stored 5 times for him to be considered in all years.
             stats = [i for i in draft_pick_stats if i.pick_number == draft_pick.pick_number and
                      i.year == (year_number + 1)][0]
-            points_per_game = max(0, np.random.normal(stats.points_per_game_mean,
+            points_per_game = max(0, self.random_number_generator.generator.normal(stats.points_per_game_mean,
                                                       scale=stats.points_per_game_std))
-            rebounds_per_game = max(0, np.random.normal(stats.rebounds_per_game_mean,
+            rebounds_per_game = max(0, self.random_number_generator.generator.normal(stats.rebounds_per_game_mean,
                                                         scale=stats.rebounds_per_game_std))
-            assists_per_game = max(0, np.random.normal(stats.assists_per_game_mean,
+            assists_per_game = max(0, self.random_number_generator.generator.normal(stats.assists_per_game_mean,
                                                        scale=stats.assists_per_game_std))
             p = PlayerDb(name='{} {}'.format(first_name, last_name),
                          points_per_game=points_per_game,

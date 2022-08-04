@@ -2,9 +2,8 @@ import itertools
 from dataclasses import dataclass
 from typing import List
 
-import numpy as np
-
 from Logger import Logger
+from RandomNumberGenerator import RandomNumberGenerator
 from db.DBHandler import DBHandler
 from db.models.player import PlayerDb
 
@@ -20,7 +19,7 @@ class TradeWrapper:
 
 
 @dataclass
-class TradeManager():
+class TradeManager:
     db_handler: DBHandler
     simulation_id: str
     year: int
@@ -29,6 +28,7 @@ class TradeManager():
     chance_of_trade_being_executed: float = 0.5
     tolerance_ppg: int = 3
     trades_per_team: int = 1
+    random_number_generator = RandomNumberGenerator()
 
     def __post_init__(self):
         self.players: List[PlayerDb] = self.db_handler.get_players_for_season(self.simulation_id, self.year)
@@ -38,12 +38,13 @@ class TradeManager():
     def execute_trades(self):
         # determine two lists of team_ids. Shuffle.
         teams_ids = list(self.db_handler.get_teams_by_team_id().keys())
-        np.random.shuffle(teams_ids)
+        self.random_number_generator.generator.shuffle(teams_ids)
         mid = int(len(teams_ids) / 2)
         from_team_ids, to_team_ids = teams_ids[:mid], teams_ids[mid:]
         # for each comb of two teams, determine combinations that work.
         for from_team_id, to_team_id in zip(from_team_ids, to_team_ids):
-            if np.random.random() > self.chance_of_trade_being_executed:
+            random_number = self.random_number_generator.generator.random()
+            if random_number > self.chance_of_trade_being_executed:
                 # chance of trade not being completed
                 continue
 
@@ -69,7 +70,7 @@ class TradeManager():
                                  to_team_id=to_team_id)
                 trades.append(t)
 
-        np.random.shuffle(trades)
+        self.random_number_generator.generator.shuffle(trades)
         return trades
 
     def get_player_sets(self, player_ids):
@@ -95,6 +96,12 @@ class TradeManager():
         return ppg
 
     def store_trades(self, trades: List[TradeWrapper]):
+        """
+        Note that trades happen in one particular season. Subsequent seasons' rosters are not affected.
+        So one can see trades as quick experiments for a single season, not for the remaining ones.
+        :param trades:
+        :return:
+        """
         for trade in trades[:self.trades_per_team]:
             # get players
             # update team_id

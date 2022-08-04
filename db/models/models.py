@@ -10,7 +10,6 @@ from db.models.playoff_bracket import PlayoffBracketDb
 from db.models.scenario import ScenarioDb
 from db.models.standing import StandingDb
 from db.models.team import TeamDb
-from db.models.vegas_odds import VegasOddsDb
 from db.models.draft_pick_stats import DraftPickStatsDb
 
 mapper_registry = registry()
@@ -23,7 +22,6 @@ mapper_registry.mapped(GameMapperDb)
 mapper_registry.mapped(PlayoffBracketDb)
 mapper_registry.mapped(GameStatsDb)
 mapper_registry.mapped(ScenarioDb)
-mapper_registry.mapped(VegasOddsDb)
 mapper_registry.mapped(DraftPickStatsDb)
 
 
