@@ -19,5 +19,5 @@ def mock_simulation_id():
 @pytest.fixture()
 def game_simulator(mock_simulation_id):
     db_handler = DBHandler()
-    gs = GameSimulator(db_handler, mock_simulation_id)
+    gs = GameSimulator(db_handler, mock_simulation_id, use_ml=True)
     return gs

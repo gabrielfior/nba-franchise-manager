@@ -19,7 +19,6 @@ def test_game_combinations(team_home_short_name, team_away_short_name, game_simu
     """
     run_game(team_home_short_name, team_away_short_name, game_simulator, mock_simulation_id)
 
-
 def run_game(team_home_short_name, team_away_short_name, game_simulator, mock_simulation_id):
     players: dict[int, PlayerDb] = {p.id: p for p in
                                     game_simulator.db_handler.get_players_for_season(mock_simulation_id, 2021)}
@@ -46,7 +45,7 @@ def run_game(team_home_short_name, team_away_short_name, game_simulator, mock_si
     n_simulations = 100
     for simulation_idx in range(n_simulations):
         mock_game_db = GameFactory()
-        game_simulator.simulate_using_dl([mock_game_db], list(players.values()))
+        game_simulator.simulate_using_team_stats([mock_game_db], list(players.values()))
         home_win = 0 if mock_game_db.away_team_points > mock_game_db.home_team_points else 1
         away_win = 1 if mock_game_db.away_team_points > mock_game_db.home_team_points else 0
 

@@ -24,6 +24,7 @@ class ScenarioManager:
         start = time.time()
         self.logger.logger.info("Simulating scenario group {}".format(self.scenario_group_id))
 
+
         for simulation_idx in range(self.num_simulations):
             self.logger.logger.debug(f'simulation # {simulation_idx} / {self.num_simulations}')
 

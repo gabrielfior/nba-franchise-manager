@@ -2,6 +2,9 @@ import pathlib
 from dataclasses import dataclass
 from typing import List, Tuple
 
+import joblib
+joblib.logger.Logger
+import lib_platform
 import pandas as pd
 from fastai.learner import load_learner
 
@@ -13,7 +16,6 @@ from db.models.game_stats import GameStatsDb
 from db.models.player import PlayerDb
 from enums import GameTypes
 
-import lib_platform
 if not lib_platform.is_platform_linux: pathlib.PosixPath = pathlib.WindowsPath
 
 class GameTiedException(Exception):
@@ -25,24 +27,27 @@ class GameSimulator:
     db_handler: DBHandler
     simulation_id: str
     model_name: str = "model_gs.pt"
+    predictor_name: str = "best_pipe.pkl"
     logger = Logger()
     random_number_generator = RandomNumberGenerator()
+    use_ml: bool = True
 
     def __post_init__(self):
         self._load_learner()
+        self._load_predictor()
 
     def simulate_game_type(self, simulation_id, year, game_type=GameTypes.REGULAR_SEASON):
         games = self.db_handler.get_games_by_game_type(self.simulation_id, game_type, year)
         players: List[PlayerDb] = self.db_handler.get_players_for_season(simulation_id, year)
 
         self.logger.logger.debug("Start DL predict game")
-        self.simulate_using_dl(games, players)
+        self.simulate_using_team_stats(games, players)
         self.logger.logger.debug("Finished DL predict game")
         self.db_handler.write_entities(games)
 
         self.logger.logger.debug("Finished simulate game type")
 
-    def simulate_using_dl(self, games: List[GameDb], players: List[PlayerDb]):
+    def simulate_using_team_stats(self, games: List[GameDb], players: List[PlayerDb]):
         stats_df = self.prepare_stats_df(games, players)
         preds = self.generate_preds(stats_df)
         self.consolidate_games(games, preds)
@@ -52,9 +57,16 @@ class GameSimulator:
                                  points_scored=points_scored, player_id=player.id)
         return game_stats
 
+    def get_root_path(self):
+        return pathlib.PosixPath(__file__).parent.resolve()
+
     def _load_learner(self):
-        curr_dir = pathlib.PosixPath(__file__).parent.resolve()
-        self.learner = load_learner(curr_dir.joinpath('models', self.model_name))  # './models/model_gs.pt')
+        root_path = self.get_root_path()
+        self.learner = load_learner(root_path.joinpath('models', self.model_name))  # './models/model_gs.pt')
+
+    def _load_predictor(self):
+        root_path = self.get_root_path()
+        self.clf = joblib.load(root_path.joinpath('models', self.predictor_name))
 
     def prepare_stats_df(self, games: List[GameDb], players: List[PlayerDb]):
         records = []
@@ -92,7 +104,21 @@ class GameSimulator:
 
         return d
 
+    def _reorder_stats_df(self, df):
+        ordered_columns = []
+        for stats_type in ['scorer', 'rebounder']:
+            for team in ['home', 'away']:
+                for idx in range(1, 6):
+                    ordered_columns.append(f'{team}_{stats_type}_{idx}')
+
+        return df[ordered_columns]
+
     def generate_preds(self, stats_df: pd.DataFrame):
+
+        if self.use_ml:
+            ordered_stats_df = self._reorder_stats_df(stats_df)
+            preds = self.clf.predict_proba(ordered_stats_df)
+            return preds
 
         test_dl = self.learner.dls.test_dl(stats_df)  # Create a test dataloader
         preds, _ = self.learner.get_preds(dl=test_dl, reorder=False)  # Make predictions on it

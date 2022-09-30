@@ -42,6 +42,7 @@ class ScenarioSimulator:
     def simulate_year(self, year: int):
 
         if not self.is_benchmark:
+            # Start offseason
             draft_simulator = DraftSimulator(self.db_handler, year, self.simulation_id)
             self.logger.logger.info('Starting simulate draft')
             draft_simulator.simulate_draft()
@@ -49,16 +50,20 @@ class ScenarioSimulator:
             # We only execute trades if it is NOT a benchmark, otherwise the teams are deterministically defined.
             TradeManager(self.db_handler, self.simulation_id, year).execute_trades()
 
+        # Start regular season
         self.logger.logger.info('Starting schedule simulator')
         ScheduleSimulator(self.db_handler, year, simulation_id=self.simulation_id).generate_schedule()
         game_simulator = GameSimulator(self.db_handler, self.simulation_id)
         self.logger.logger.info('Starting game simulator')
         game_simulator.simulate_game_type(self.simulation_id, year, GameTypes.REGULAR_SEASON)
+
+        # Start playoffs
         self.logger.logger.info('Starting standings simulator')
         StandingsCalculator(self.db_handler, self.simulation_id, year).calculate_standings()
         self.logger.logger.info('Starting playoff simulator')
         PlayoffCoordinator(self.db_handler, self.simulation_id, year, game_simulator).simulate_playoffs()
 
+        # Start offseason
         if not self.is_benchmark:
             self.logger.logger.info('Starting lottery simulator')
             LotteryCoordinator(self.db_handler, self.simulation_id, year).generate_lottery()
